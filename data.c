@@ -19,3 +19,12 @@ void put(Node *head, Board *newBoard){
 		current->next = newNode;
 	}
 }
+
+int getQueueLength(Node *head){
+	int length = 0;
+	while(head->next != NULL){
+		length++;
+		head = head->next;
+	}
+	return length;
+}
