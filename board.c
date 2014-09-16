@@ -1,9 +1,19 @@
+/*
+ * John Goettsche
+ * CS 470
+ * Assignment 1
+ * board setup
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
 #include "board.h"
 
+/* 
+ * inserts the tile values from an array of integers as input.
+ */
 insertTiles(Board *board, int *nums){
 	int i = 0;
 	int y;
@@ -16,6 +26,11 @@ insertTiles(Board *board, int *nums){
 	}
 }
 
+/* 
+ * numbers is an array of integers based on the configuration
+ * of the board, it is used to transfer the configuration from
+ * parent to child.
+ */
 setNumbers(Board *board){
 	int i = 0;
 	int x, y;
@@ -31,7 +46,11 @@ setNumbers(Board *board){
 	}
 	board->value = setPatternValue(board);
 }
-	
+
+/* 
+ * each board has an integer value based upon its configuration,
+ * this function sets that value
+ */
 int setPatternValue(Board *board){
 	int count = 0;
 	int result = 0;
@@ -45,6 +64,9 @@ int setPatternValue(Board *board){
 	return result;
 }
 
+/* 
+ * sets the depth and path history
+ */
 void completeBoard(Board *current, Board *newBoard, int mov){
 	int i;
 	newBoard->depth = current->depth + 1;

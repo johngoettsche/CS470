@@ -1,23 +1,29 @@
+/*
+ * John Goettsche
+ * CS 470
+ * Assignment 1
+ */
+ 
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "data.h"
 
-void put(Node *head, Board *newBoard){
-	if(head->b == NULL){
-		head->b = newBoard;
-		head->next = NULL;
+/*
+ * adds a board to the queue.
+ */
+Node *put(Node *tail, Board *newBoard){
+	if(tail->b == NULL){
+		tail->b = newBoard;
+		tail->next = NULL;
 	} else {
-		Node *current = (Node *)calloc(1, sizeof(Node));
-		current = head;
 		Node *newNode = (Node *)calloc(1, sizeof(Node));
 		newNode->b = newBoard;
 		newNode->next = NULL;
-		while(current->next != NULL) {
-			current = current->next;
-		}
-		current->next = newNode;
+		tail->next = newNode;
+		return newNode;
 	}
+	return tail;
 }
 
 int getQueueLength(Node *head){
