@@ -11,3 +11,9 @@ struct Node{
 	Board *b;
 	Node *next;
 };
+
+typedef struct HashTable HashTable;
+struct HashTable{
+	int size;
+	Node **table;
+};

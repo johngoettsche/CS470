@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "data.h"
 
 /*
@@ -25,6 +26,11 @@ char *readData(){
 }
 
 int main(){
+	//set up hash table
+	//HashTable *hashTable;
+	//int tableSize = pow(SIZE, 6) - SIZE + 1;
+	//hashTable = createHashTable(tableSize);
+
 	int nos[SIZE * SIZE];
 	int g[SIZE * SIZE];
 	char *nums = (char *)calloc(SIZE * SIZE, sizeof(char));
@@ -79,7 +85,10 @@ int main(){
 				success = 1;
 				solution = newBoard;
 			}
-			tail = put(tail, newBoard);
+			//if(!success && lookupBoard(hashTable, newBoard) == NULL){
+				tail = put(tail, newBoard);
+				//addBoard(hashTable, newBoard);
+			//}
 		}
 		//may move tile to the east
 		if(!success && current->tile[x + 1][y] > 0){
@@ -93,7 +102,10 @@ int main(){
 				success = 1;
 				solution = newBoard;
 			}
-			tail = put(tail, newBoard);
+			//if(!success && lookupBoard(hashTable, newBoard) == NULL){
+				tail = put(tail, newBoard);
+				//addBoard(hashTable, newBoard);
+			//}
 		}
 		//may move tile to the south
 		if(!success && current->tile[x][y + 1] > 0){
@@ -107,7 +119,10 @@ int main(){
 				success = 1;
 				solution = newBoard;
 			}
-			tail = put(tail, newBoard);
+			//if(!success && lookupBoard(hashTable, newBoard) == NULL){
+				tail = put(tail, newBoard);
+				//addBoard(hashTable, newBoard);
+			//}
 		}
 		//may move tile to the west
 		if(!success && current->tile[x - 1][y] > 0){
@@ -121,7 +136,10 @@ int main(){
 				success = 1;
 				solution = newBoard;
 			}
-			tail = put(tail, newBoard);
+			//if(!success && lookupBoard(hashTable, newBoard) == NULL){
+				tail = put(tail, newBoard);
+				//addBoard(hashTable, newBoard);
+			//}
 		}
 		head = head->next; //pop
 	}

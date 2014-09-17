@@ -1,4 +1,4 @@
-/*
+/* pow
  * John Goettsche
  * CS 470
  * Assignment 1
@@ -81,11 +81,11 @@ void completeBoard(Board *current, Board *newBoard, int mov){
 void printBoard(Board *board){
 	int x;
 	int y;
-	//printf("----\n");
 	for(y = 1; y <= SIZE; y++){
 		for(x = 1; x <= SIZE; x++){
 			if(board->tile[x][y] > 0) printf("%d", board->tile[x][y]);
 			else printf(".");
+			if(x < SIZE) printf(" ");
 		}
 		printf("\n");
 	}
@@ -94,7 +94,7 @@ void printBoard(Board *board){
 void printPath(Board *board){
 	int i;
 	for(i = 0; i < board->depth; i++){
-		if(i > 0) printf(", ");
+		if(i > 0) printf(" ");
 		printf("%d", board->path[i]);
 	}
 	printf("\n");
