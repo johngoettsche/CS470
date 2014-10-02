@@ -27,9 +27,9 @@ char *readData(){
 
 int main(){
 	//set up hash table
-	//HashTable *hashTable;
-	//int tableSize = pow(SIZE, 6) - SIZE + 1;
-	//hashTable = createHashTable(tableSize);
+	HashTable *hashTable;
+	int tableSize = pow(SIZE, 6) - SIZE + 1;
+	hashTable = (HashTable *)createHashTable(tableSize);
 
 	int nos[SIZE * SIZE];
 	int g[SIZE * SIZE];
@@ -60,94 +60,110 @@ int main(){
 	printBoard(goal);
 	
 	//set up queue
-	Node *head = (Node *)calloc(1, sizeof(Node));
-	head = put(head, board);
-	Board *tail = head;
-	Board *current;
+	Queue *queue = (Queue *)createQueue();
+	int error = put(queue, board);
+	printf("%d\n", error);
+	if(queue->head == NULL)printf("no current head\n");
+
+	//Board *tail = head;
+	Node *current;
 	
 	//iterate through queue until done
 	int success = 0;
+	printf("starting while\n");
 	while(!success){	
-		current = head->b;
+		printf("set current\n");
+		if(queue->head == NULL)printf("no current head\n");
+		current = queue->head;
 		
-		int x = current->openX;
-		int y = current->openY;
+		if(current == NULL)printf("no current node\n");
+		if(current->b == NULL)printf("no current board\n");
+		if(current->b->openX == NULL)printf("no openX\n");
+		
+		int x = current->b->openX;
+		int y = current->b->openY;
 		int mov;
 		//may move tile to the north
-		if(!success && current->tile[x][y - 1] > 0){
+		printf("moves\n");
+		if(!success && current->b->tile[x][y - 1] > 0){
 			Board *newBoard = (Board *)calloc(1, sizeof(Board));
-			insertTiles(newBoard, current->numbers);
-			newBoard->tile[x][y - 1] = current->tile[x][y];
-			newBoard->tile[x][y] = current->tile[x][y - 1];
+			insertTiles(newBoard, current->b->numbers);
+			newBoard->tile[x][y - 1] = current->b->tile[x][y];
+			newBoard->tile[x][y] = current->b->tile[x][y - 1];
 			mov = newBoard->tile[x][y];
-			completeBoard(current, newBoard, mov);
+			completeBoard(current->b, newBoard, mov);
 			if(newBoard->value == goal->value){
 				success = 1;
 				solution = newBoard;
 			}
-			//if(!success && lookupBoard(hashTable, newBoard) == NULL){
-				tail = put(tail, newBoard);
-				//addBoard(hashTable, newBoard);
-			//}
+			if(!success && lookupBoard(hashTable, newBoard) == NULL){
+				error = put(queue, newBoard);
+				addBoard(hashTable, newBoard);
+			}
 		}
 		//may move tile to the east
-		if(!success && current->tile[x + 1][y] > 0){
+		if(!success && current->b->tile[x + 1][y] > 0){
 			Board *newBoard = (Board *)calloc(1, sizeof(Board));
-			insertTiles(newBoard, current->numbers);
-			newBoard->tile[x + 1][y] = current->tile[x][y];
-			newBoard->tile[x][y] = current->tile[x + 1][y];
+			insertTiles(newBoard, current->b->numbers);
+			newBoard->tile[x + 1][y] = current->b->tile[x][y];
+			newBoard->tile[x][y] = current->b->tile[x + 1][y];
 			mov = newBoard->tile[x][y];
-			completeBoard(current, newBoard, mov);
+			completeBoard(current->b, newBoard, mov);
 			if(newBoard->value == goal->value){
 				success = 1;
 				solution = newBoard;
 			}
-			//if(!success && lookupBoard(hashTable, newBoard) == NULL){
-				tail = put(tail, newBoard);
-				//addBoard(hashTable, newBoard);
-			//}
+			if(!success && lookupBoard(hashTable, newBoard) == NULL){
+				error = put(queue, newBoard);
+				//tail = put(tail, newBoard);
+				addBoard(hashTable, newBoard);
+			}
 		}
 		//may move tile to the south
-		if(!success && current->tile[x][y + 1] > 0){
+		if(!success && current->b->tile[x][y + 1] > 0){
 			Board *newBoard = (Board *)calloc(1, sizeof(Board));
-			insertTiles(newBoard, current->numbers);
-			newBoard->tile[x][y + 1] = current->tile[x][y];
-			newBoard->tile[x][y] = current->tile[x][y + 1];
+			insertTiles(newBoard, current->b->numbers);
+			newBoard->tile[x][y + 1] = current->b->tile[x][y];
+			newBoard->tile[x][y] = current->b->tile[x][y + 1];
 			mov = newBoard->tile[x][y];
-			completeBoard(current, newBoard, mov);
+			completeBoard(current->b, newBoard, mov);
 			if(newBoard->value == goal->value){
 				success = 1;
 				solution = newBoard;
 			}
-			//if(!success && lookupBoard(hashTable, newBoard) == NULL){
-				tail = put(tail, newBoard);
-				//addBoard(hashTable, newBoard);
-			//}
+			if(!success && lookupBoard(hashTable, newBoard) == NULL){
+				error = put(queue, newBoard);
+				//tail = put(tail, newBoard);
+				addBoard(hashTable, newBoard);
+			}
 		}
 		//may move tile to the west
-		if(!success && current->tile[x - 1][y] > 0){
+		if(!success && current->b->tile[x - 1][y] > 0){
 			Board *newBoard = (Board *)calloc(1, sizeof(Board));
-			insertTiles(newBoard, current->numbers);
-			newBoard->tile[x - 1][y] = current->tile[x][y];
-			newBoard->tile[x][y] = current->tile[x - 1][y];
+			insertTiles(newBoard, current->b->numbers);
+			newBoard->tile[x - 1][y] = current->b->tile[x][y];
+			newBoard->tile[x][y] = current->b->tile[x - 1][y];
 			mov = newBoard->tile[x][y];
-			completeBoard(current, newBoard, mov);
+			completeBoard(current->b, newBoard, mov);
 			if(newBoard->value == goal->value){
 				success = 1;
 				solution = newBoard;
 			}
-			//if(!success && lookupBoard(hashTable, newBoard) == NULL){
-				tail = put(tail, newBoard);
-				//addBoard(hashTable, newBoard);
-			//}
+			if(!success && lookupBoard(hashTable, newBoard) == NULL){
+				error = put(queue, newBoard);
+				//tail = put(tail, newBoard);
+				addBoard(hashTable, newBoard);
+			}
 		}
-		head = head->next; //pop
+		printf("pop\n");
+		pop(queue);
+		//head = head->next; //pop
 	}
 	//print out results
 	printf("\nSOLUTION:  ");
 	printPath(solution);
 	printf("NUM MOVES:  %d\n", solution->depth);
-	int ql = getQueueLength(head);
+	int ql = getQueueLength(queue);
 	printf("QUEUE LEN:  %d\n", ql);
 	return 0;
 }

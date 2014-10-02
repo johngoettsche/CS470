@@ -12,25 +12,44 @@
 /*
  * adds a board to the queue.
  */
-Node *put(Node *tail, Board *newBoard){
-	if(tail->b == NULL){
-		tail->b = newBoard;
-		tail->next = NULL;
-	} else {
-		Node *newNode = (Node *)calloc(1, sizeof(Node));
-		newNode->b = newBoard;
+ 
+Queue *createQueue(){
+	Queue *newQueue;
+	if((newQueue = (Queue *)calloc(1, sizeof(Queue))) == NULL) return NULL;
+	newQueue->head = NULL;
+	newQueue->tail = NULL;
+	return newQueue;
+}
+ 
+int put(Queue queue, Board *newBoard){
+	Node *newNode;
+	if((newNode = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
+	newNode->b = newBoard;
+	if(queue.tail == NULL){
+		printf("adding first node to queue\n");
+		queue.head = newNode;
+		queue.tail = newNode;
 		newNode->next = NULL;
-		tail->next = newNode;
-		return newNode;
+	} else {
+		printf("adding a node to queue\n");
+		newNode->next = NULL;
+		queue.tail->next = newNode;
 	}
-	return tail;
+	return 0;
 }
 
-int getQueueLength(Node *head){
+void pop(Queue queue){
+	queue.head = queue.head->next;
+}
+
+int getQueueLength(Queue *queue){
 	int length = 0;
-	while(head->next != NULL){
-		length++;
-		head = head->next;
+	Node *current = queue->head;
+	if(current != NULL) {
+		while(current->next != NULL){
+			length++;
+			current = current->next;
+		}
 	}
 	return length;
 }
@@ -39,7 +58,7 @@ HashTable *createHashTable(int size){
 	int i;
 	HashTable *newHashTable;
 	if(size < 1) return NULL;
-	if((newHashTable = calloc(1, sizeof(HashTable))) == NULL) return NULL;
+	if((newHashTable = (HashTable *)calloc(1, sizeof(HashTable))) == NULL) return NULL;
 	if((newHashTable->table = calloc(size, sizeof(HashTable))) == NULL) return NULL;
 	for(i = 0; i < size; i++) newHashTable->table[i] = NULL;
 	newHashTable->size = size;
@@ -64,8 +83,8 @@ int addBoard(HashTable *hashTable, Board *board){
 	Node *current;
 	int hashValue = hash(hashTable, board);
 	if((newList = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
-	current = lookupBoard(hashTable, board);
-	if(current != NULL) return 2;
+	current->b = lookupBoard(hashTable, board);
+	if(current->b != NULL) return 2;
 	newList->b = board;
 	newList->next = hashTable->table[hashValue];
 	hashTable->table[hashValue] = newList;

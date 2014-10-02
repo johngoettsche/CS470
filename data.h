@@ -12,6 +12,12 @@ struct Node{
 	Node *next;
 };
 
+typedef struct Queue Queue;
+struct Queue{
+	Node *head;
+	Node *tail;
+};
+
 typedef struct HashTable HashTable;
 struct HashTable{
 	int size;
