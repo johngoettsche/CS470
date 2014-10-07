@@ -86,13 +86,39 @@ int getH(Board *board){
 	return 0;
 }*/
 
-/* h = out of place */
+/* h = out of place 
 int getH(Board *board){
 	int h = 0;
 	int x, y;
 	for(x = 1; x <= SIZE; x++)
 		for(y = 1; y <= SIZE; y++)
 			if(board->tile[x][y] != goal->tile[x][y]) h++;
+	return h;
+}*/
+
+/* h = Manhattan distance */
+int getH(Board *board){
+	int h = 0;
+	int x, bx, gx, y, by, gy, n;
+	for(n = 1; n < SIZE * SIZE; n++) {
+		for(x = 1; x <= SIZE; x++) {
+			for(y = 1; y <= SIZE; y++) {
+				if (n == board->tile[x][y]) {
+					bx = x;
+					by = y;
+				}
+			}
+		}
+		for(x = 1; x <= SIZE; x++) {
+			for(y = 1; y <= SIZE; y++) {
+				if (n == goal->tile[x][y]) {
+					gx = x;
+					gy = y;
+				}
+			}
+		}
+		h += abs(bx - gx) + abs(by - gy);
+	}
 	return h;
 }
 

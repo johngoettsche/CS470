@@ -90,12 +90,12 @@ int main(){
 	Queue *queue = (Queue *)createQueue();
 	int error = insert(queue, board);
 	Node *current;
-	Board *testBoard;
+	Board *newBoard;
+	int m;
+	int fVal;
 	//iterate through queue until done
 	while(!success){	
 		current = queue->head;
-		Board *newBoard;
-		int m;
 		for(m = 0; m < 4; m++){
 			if(!success) {
 				if((newBoard = (Board *)calloc(1, sizeof(Board))) == NULL) return 1;
@@ -104,12 +104,10 @@ int main(){
 						success = 1;
 						solution = newBoard;
 					}
-					if(testBoard = lookupBoard(hashTable, newBoard) == NULL){
+					if((fVal = lookupBoard(hashTable, newBoard)) == -1){
 						error = insert(queue, newBoard);
 						error = addBoard(hashTable, newBoard);
-					}else{
-						if(newBoard->f < testBoard->f) replace(queue, newBoard);
-					}
+					} else if(newBoard->f < fVal) insert(queue, newBoard);
 				}
 			}
 		}

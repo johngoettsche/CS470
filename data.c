@@ -58,7 +58,7 @@ int insert(Queue *queue, Board *newBoard){
 	}
 	return 0;
 }
-
+/*
 int replace(Queue *queue, Board *newBoard){
 	Node *current = queue->head;
 	Node *newNode;
@@ -81,7 +81,7 @@ int replace(Queue *queue, Board *newBoard){
 			}
 		}
 	return 0;
-}
+}*/
 
 void pop(Queue *queue){
 	queue->head = queue->head->next;
@@ -114,26 +114,28 @@ int hash(HashTable *hashTable, Board *board){
 	return board->value % hashTable->size;
 }
 
-Board *lookupBoard(HashTable *hashTable, Board *board){
+int lookupBoard(HashTable *hashTable, Board *board){
 	Node *list;
 	int hashValue = hash(hashTable, board);
 	for(list = hashTable->table[hashValue]; list != NULL; list = list->next){
 		if(board->value == list->b->value) {
-			return list->b;
+				return list->b->f;
 		}
 	}
-	return NULL;
+	return -1;
 }
 
 int addBoard(HashTable *hashTable, Board *board){
    Node *newList;
-	Board *current;
+	int exist;
 	int hashValue = hash(hashTable, board);
 	if((newList = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
-	current = lookupBoard(hashTable, board);
-	if(current != NULL) return 2;
-	newList->b = board;
-	newList->next = hashTable->table[hashValue];
-	hashTable->table[hashValue] = newList;
-	return 0;
+	if((exist = lookupBoard(hashTable, board)) == -1) {
+	//if(current != NULL) return 2;
+		newList->b = board;
+		newList->next = hashTable->table[hashValue];
+		hashTable->table[hashValue] = newList;
+		return 0;
+	}
+	return 1;
 }
