@@ -1,7 +1,7 @@
 /*
  * John Goettsche
  * CS 470
- * Assignment 1
+ * Assignment 2
  */
  
 #include <stdio.h>
@@ -58,30 +58,6 @@ int insert(Queue *queue, Board *newBoard){
 	}
 	return 0;
 }
-/*
-int replace(Queue *queue, Board *newBoard){
-	Node *current = queue->head;
-	Node *newNode;
-	if((newNode = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
-	newNode->b = newBoard;
-	newNode->next = NULL;
-	if(current == NULL){
-		queue->head = newNode;
-		queue->tail = newNode;
-		queue->head->next = NULL;
-	} else {
-		while(current->b->f <= newBoard->f && current->next != NULL) {
-			if(current->b->f <= newBoard->f) current = current->next;
-			else if(current->b->f ==
-			
-			newNode->next = current->next;
-			current->next = newNode;
-			if(newNode->next == NULL) {
-				queue->tail = newNode;
-			}
-		}
-	return 0;
-}*/
 
 void pop(Queue *queue){
 	queue->head = queue->head->next;
@@ -131,7 +107,6 @@ int addBoard(HashTable *hashTable, Board *board){
 	int hashValue = hash(hashTable, board);
 	if((newList = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
 	if((exist = lookupBoard(hashTable, board)) == -1) {
-	//if(current != NULL) return 2;
 		newList->b = board;
 		newList->next = hashTable->table[hashValue];
 		hashTable->table[hashValue] = newList;

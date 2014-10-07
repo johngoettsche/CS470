@@ -1,7 +1,7 @@
 /*
  * John Goettsche
  * CS 470
- * Assignment 1
+ * Assignment 2
  */
 
 #include "board.h"

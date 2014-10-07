@@ -1,8 +1,8 @@
 /*
  * John Goettsche
  * CS 470
- * Assignment 1
- * basic search for 8 puzzle
+ * Assignment 2
+ * A* search for 8 puzzle
  */
 
 #include <stdio.h>

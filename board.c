@@ -1,7 +1,7 @@
 /* pow
  * John Goettsche
  * CS 470
- * Assignment 1
+ * Assignment 2
  * board setup
  */
 
@@ -96,7 +96,7 @@ int getH(Board *board){
 	return h;
 }*/
 
-/* h = Manhattan distance */
+/* h = Manhattan distance 
 int getH(Board *board){
 	int h = 0;
 	int x, bx, gx, y, by, gy, n;
@@ -118,6 +118,60 @@ int getH(Board *board){
 			}
 		}
 		h += abs(bx - gx) + abs(by - gy);
+	}
+	return h;
+}*/
+
+/* h = greatest * 2 
+int getH(Board *board){
+	int h = 0;
+	int x, bx, gx, y, by, gy, n;
+	for(n = 1; n < SIZE * SIZE; n++) {
+		for(x = 1; x <= SIZE; x++) {
+			for(y = 1; y <= SIZE; y++) {
+				if (n == board->tile[x][y]) {
+					bx = x;
+					by = y;
+				}
+			}
+		}
+		for(x = 1; x <= SIZE; x++) {
+			for(y = 1; y <= SIZE; y++) {
+				if (n == goal->tile[x][y]) {
+					gx = x;
+					gy = y;
+				}
+			}
+		}
+		if(abs(bx - gx) > abs(by - gy)) h += abs(bx - gx) * 2;
+		else h += abs(by - gy) * 2;
+	}
+	return h;
+}*/
+
+/* h = greatest * 3 */
+int getH(Board *board){
+	int h = 0;
+	int x, bx, gx, y, by, gy, n;
+	for(n = 1; n < SIZE * SIZE; n++) {
+		for(x = 1; x <= SIZE; x++) {
+			for(y = 1; y <= SIZE; y++) {
+				if (n == board->tile[x][y]) {
+					bx = x;
+					by = y;
+				}
+			}
+		}
+		for(x = 1; x <= SIZE; x++) {
+			for(y = 1; y <= SIZE; y++) {
+				if (n == goal->tile[x][y]) {
+					gx = x;
+					gy = y;
+				}
+			}
+		}
+		if(abs(bx - gx) > abs(by - gy)) h += abs(bx - gx) * 3;
+		else h += abs(by - gy) * 3;
 	}
 	return h;
 }
