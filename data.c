@@ -15,31 +15,76 @@
  
 Queue *createQueue(){
 	Queue *newQueue;
+	Node *newNode;
 	if((newQueue = (Queue *)calloc(1, sizeof(Queue))) == NULL) return NULL;
 	newQueue->head = NULL;
 	newQueue->tail = NULL;
 	return newQueue;
 }
  
-int put(Queue queue, Board *newBoard){
+int put(Queue *queue, Board *newBoard){
 	Node *newNode;
 	if((newNode = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
 	newNode->b = newBoard;
-	if(queue.tail == NULL){
-		printf("adding first node to queue\n");
-		queue.head = newNode;
-		queue.tail = newNode;
-		newNode->next = NULL;
+	if(queue->tail == NULL){
+		queue->head = newNode;
+		queue->tail = newNode;
+		queue->head->next = NULL;
 	} else {
-		printf("adding a node to queue\n");
 		newNode->next = NULL;
-		queue.tail->next = newNode;
+		queue->tail->next = newNode;
+		queue->tail = queue->tail->next;
 	}
 	return 0;
 }
 
-void pop(Queue queue){
-	queue.head = queue.head->next;
+int insert(Queue *queue, Board *newBoard){
+	Node *current = queue->head;
+	Node *newNode;
+	if((newNode = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
+	newNode->b = newBoard;
+	newNode->next = NULL;
+	if(current == NULL){
+		queue->head = newNode;
+		queue->tail = newNode;
+		queue->head->next = NULL;
+	} else {
+		while(current->b->f <= newBoard->f && current->next != NULL) current = current->next;
+		newNode->next = current->next;
+		current->next = newNode;
+		if(newNode->next == NULL) {
+			queue->tail = newNode;
+		}
+	}
+	return 0;
+}
+
+int replace(Queue *queue, Board *newBoard){
+	Node *current = queue->head;
+	Node *newNode;
+	if((newNode = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
+	newNode->b = newBoard;
+	newNode->next = NULL;
+	if(current == NULL){
+		queue->head = newNode;
+		queue->tail = newNode;
+		queue->head->next = NULL;
+	} else {
+		while(current->b->f <= newBoard->f && current->next != NULL) {
+			if(current->b->f <= newBoard->f) current = current->next;
+			else if(current->b->f ==
+			
+			newNode->next = current->next;
+			current->next = newNode;
+			if(newNode->next == NULL) {
+				queue->tail = newNode;
+			}
+		}
+	return 0;
+}
+
+void pop(Queue *queue){
+	queue->head = queue->head->next;
 }
 
 int getQueueLength(Queue *queue){
@@ -73,19 +118,22 @@ Board *lookupBoard(HashTable *hashTable, Board *board){
 	Node *list;
 	int hashValue = hash(hashTable, board);
 	for(list = hashTable->table[hashValue]; list != NULL; list = list->next){
-		if(board->value == list->b->value) return board;
+		if(board->value == list->b->value) {
+			return list->b;
+		}
 	}
 	return NULL;
 }
 
 int addBoard(HashTable *hashTable, Board *board){
    Node *newList;
-	Node *current;
+	Board *current;
 	int hashValue = hash(hashTable, board);
 	if((newList = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
-	current->b = lookupBoard(hashTable, board);
-	if(current->b != NULL) return 2;
+	current = lookupBoard(hashTable, board);
+	if(current != NULL) return 2;
 	newList->b = board;
 	newList->next = hashTable->table[hashValue];
 	hashTable->table[hashValue] = newList;
+	return 0;
 }

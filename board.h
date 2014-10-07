@@ -13,6 +13,7 @@ struct Board{
 		int value; //board unique value
 		int depth; //board depth
 		int *path; //path required to reach this board
+		int f, h; //f = g(depth) + h
 		int numbers[(SIZE * SIZE)]; //data transfer array
 		int tile[SIZE + 2][SIZE + 2]; //board configuration
 };

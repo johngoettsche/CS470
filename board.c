@@ -11,6 +11,8 @@
 
 #include "board.h"
 
+extern Board *goal;
+
 /* 
  * inserts the tile values from an array of integers as input.
  */
@@ -76,6 +78,22 @@ void completeBoard(Board *current, Board *newBoard, int mov){
 		newBoard->path[i] = current->path[i];
 	}
 	newBoard->path[newBoard->depth - 1] = mov;
+	newBoard->f = newBoard->depth + getH(newBoard);
+}
+
+/* h = 0 
+int getH(Board *board){
+	return 0;
+}*/
+
+/* h = out of place */
+int getH(Board *board){
+	int h = 0;
+	int x, y;
+	for(x = 1; x <= SIZE; x++)
+		for(y = 1; y <= SIZE; y++)
+			if(board->tile[x][y] != goal->tile[x][y]) h++;
+	return h;
 }
 
 void printBoard(Board *board){
@@ -89,6 +107,7 @@ void printBoard(Board *board){
 		}
 		printf("\n");
 	}
+	//printf("%d\n", board->value);
 }
 
 void printPath(Board *board){

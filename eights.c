@@ -10,6 +10,9 @@
 #include <math.h>
 #include "data.h"
 
+int success = 0;
+Board *solution = NULL;
+Board *goal;
 /*
  * function reads standard input.
  */
@@ -25,7 +28,29 @@ char *readData(){
 	return nums;
 }
 
+Board *move(Node *current, Move thisMove){
+	Board *newBoard;
+	int x = thisMove.x;
+	int y = thisMove.y;
+	int currentX = current->b->openX;
+	int currentY = current->b->openY;
+	int mov;
+	if(current->b->tile[currentX + x][currentY + y] > 0){
+		if((newBoard = (Board *)calloc(1, sizeof(Board))) == NULL) exit(1);
+		insertTiles(newBoard, current->b->numbers);
+		newBoard->tile[currentX + x][currentY + y] = current->b->tile[currentX][currentY];
+		newBoard->tile[currentX][currentY] = current->b->tile[currentX + x][currentY + y];
+		mov = newBoard->tile[currentX][currentY];
+		completeBoard(current->b, newBoard, mov);
+		return newBoard;
+	}
+	return NULL;
+}
+
 int main(){
+	//set up moves
+	Move moves[4] ={{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+
 	//set up hash table
 	HashTable *hashTable;
 	int tableSize = pow(SIZE, 6) - SIZE + 1;
@@ -33,16 +58,18 @@ int main(){
 
 	int nos[SIZE * SIZE];
 	int g[SIZE * SIZE];
-	char *nums = (char *)calloc(SIZE * SIZE, sizeof(char));
-	nums = readData();
-	char *gl = (char *)calloc(SIZE * SIZE, sizeof(char));
-	gl = readData();
+	//char *nums = (char *)calloc(SIZE * SIZE, sizeof(char));
+	char nums[9] = {'7', '2', '4', '5', '6', '0', '8', '3', '1'};
+	//nums = readData();
+	//char *gl = (char *)calloc(SIZE * SIZE, sizeof(char));
+	char gl[9] =  {'2', '4', '1', '7', '8', '6', '5', '0', '3'};
+	//gl = eadData();
 	int i;
 	//converts char* to int*
 	for(i = 0; i < SIZE * SIZE; i++) nos[i] = (int)nums[i] - '0';
 	for(i = 0; i < SIZE * SIZE; i++) g[i] = (int)gl[i] - '0';
 	
-	Board *goal = (Board *)calloc(1, sizeof(Board));
+	goal = (Board *)calloc(1, sizeof(Board));
 	insertTiles(goal, g);
 	setNumbers(goal);
 	
@@ -50,9 +77,9 @@ int main(){
 	insertTiles(board, nos);
 	setNumbers(board);
 	board->depth = 0;
-	setNumbers(board);
+	board->f = 0 + getH(board);
 	
-	Board *solution = (Board *)calloc(1, sizeof(Board));
+	solution = (Board *)calloc(1, sizeof(Board));
 	
 	printf("\nSTART:\n");
 	printBoard(board);
@@ -61,103 +88,33 @@ int main(){
 	
 	//set up queue
 	Queue *queue = (Queue *)createQueue();
-	int error = put(queue, board);
-	printf("%d\n", error);
-	if(queue->head == NULL)printf("no current head\n");
-
-	//Board *tail = head;
+	int error = insert(queue, board);
 	Node *current;
-	
+	Board *testBoard;
 	//iterate through queue until done
-	int success = 0;
-	printf("starting while\n");
 	while(!success){	
-		printf("set current\n");
-		if(queue->head == NULL)printf("no current head\n");
 		current = queue->head;
-		
-		if(current == NULL)printf("no current node\n");
-		if(current->b == NULL)printf("no current board\n");
-		if(current->b->openX == NULL)printf("no openX\n");
-		
-		int x = current->b->openX;
-		int y = current->b->openY;
-		int mov;
-		//may move tile to the north
-		printf("moves\n");
-		if(!success && current->b->tile[x][y - 1] > 0){
-			Board *newBoard = (Board *)calloc(1, sizeof(Board));
-			insertTiles(newBoard, current->b->numbers);
-			newBoard->tile[x][y - 1] = current->b->tile[x][y];
-			newBoard->tile[x][y] = current->b->tile[x][y - 1];
-			mov = newBoard->tile[x][y];
-			completeBoard(current->b, newBoard, mov);
-			if(newBoard->value == goal->value){
-				success = 1;
-				solution = newBoard;
-			}
-			if(!success && lookupBoard(hashTable, newBoard) == NULL){
-				error = put(queue, newBoard);
-				addBoard(hashTable, newBoard);
+		Board *newBoard;
+		int m;
+		for(m = 0; m < 4; m++){
+			if(!success) {
+				if((newBoard = (Board *)calloc(1, sizeof(Board))) == NULL) return 1;
+				if(newBoard = move(current, moves[m])){
+					if(newBoard->value == goal->value){
+						success = 1;
+						solution = newBoard;
+					}
+					if(testBoard = lookupBoard(hashTable, newBoard) == NULL){
+						error = insert(queue, newBoard);
+						error = addBoard(hashTable, newBoard);
+					}else{
+						if(newBoard->f < testBoard->f) replace(queue, newBoard);
+					}
+				}
 			}
 		}
-		//may move tile to the east
-		if(!success && current->b->tile[x + 1][y] > 0){
-			Board *newBoard = (Board *)calloc(1, sizeof(Board));
-			insertTiles(newBoard, current->b->numbers);
-			newBoard->tile[x + 1][y] = current->b->tile[x][y];
-			newBoard->tile[x][y] = current->b->tile[x + 1][y];
-			mov = newBoard->tile[x][y];
-			completeBoard(current->b, newBoard, mov);
-			if(newBoard->value == goal->value){
-				success = 1;
-				solution = newBoard;
-			}
-			if(!success && lookupBoard(hashTable, newBoard) == NULL){
-				error = put(queue, newBoard);
-				//tail = put(tail, newBoard);
-				addBoard(hashTable, newBoard);
-			}
-		}
-		//may move tile to the south
-		if(!success && current->b->tile[x][y + 1] > 0){
-			Board *newBoard = (Board *)calloc(1, sizeof(Board));
-			insertTiles(newBoard, current->b->numbers);
-			newBoard->tile[x][y + 1] = current->b->tile[x][y];
-			newBoard->tile[x][y] = current->b->tile[x][y + 1];
-			mov = newBoard->tile[x][y];
-			completeBoard(current->b, newBoard, mov);
-			if(newBoard->value == goal->value){
-				success = 1;
-				solution = newBoard;
-			}
-			if(!success && lookupBoard(hashTable, newBoard) == NULL){
-				error = put(queue, newBoard);
-				//tail = put(tail, newBoard);
-				addBoard(hashTable, newBoard);
-			}
-		}
-		//may move tile to the west
-		if(!success && current->b->tile[x - 1][y] > 0){
-			Board *newBoard = (Board *)calloc(1, sizeof(Board));
-			insertTiles(newBoard, current->b->numbers);
-			newBoard->tile[x - 1][y] = current->b->tile[x][y];
-			newBoard->tile[x][y] = current->b->tile[x - 1][y];
-			mov = newBoard->tile[x][y];
-			completeBoard(current->b, newBoard, mov);
-			if(newBoard->value == goal->value){
-				success = 1;
-				solution = newBoard;
-			}
-			if(!success && lookupBoard(hashTable, newBoard) == NULL){
-				error = put(queue, newBoard);
-				//tail = put(tail, newBoard);
-				addBoard(hashTable, newBoard);
-			}
-		}
-		printf("pop\n");
 		pop(queue);
-		//head = head->next; //pop
+		if(queue->head == NULL)printf("Empty Queue\n");
 	}
 	//print out results
 	printf("\nSOLUTION:  ");

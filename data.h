@@ -23,3 +23,9 @@ struct HashTable{
 	int size;
 	Node **table;
 };
+
+typedef struct Move Move;
+struct Move{
+	int x;
+	int y;
+};
