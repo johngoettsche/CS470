@@ -67,6 +67,7 @@ int getQueueLength(Queue *queue){
 	int length = 0;
 	Node *current = queue->head;
 	if(current != NULL) {
+		length++;
 		while(current->next != NULL){
 			length++;
 			current = current->next;

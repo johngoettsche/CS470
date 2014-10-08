@@ -69,8 +69,9 @@ int setPatternValue(Board *board){
 /* 
  * sets the depth and path history
  */
-void completeBoard(Board *current, Board *newBoard, int mov){
+void completeBoard(Board *current, Board *newBoard, int mov, int f){
 	int i;
+	int h;
 	newBoard->depth = current->depth + 1;
 	newBoard->path = (int *)calloc(newBoard->depth, sizeof(int));
 	setNumbers(newBoard);
@@ -78,26 +79,45 @@ void completeBoard(Board *current, Board *newBoard, int mov){
 		newBoard->path[i] = current->path[i];
 	}
 	newBoard->path[newBoard->depth - 1] = mov;
-	newBoard->f = newBoard->depth + getH(newBoard);
+	switch(f){
+		case 0:
+			newBoard->f = newBoard->depth + getH(newBoard);
+			break;
+		case 1:
+			newBoard->f = newBoard->depth + getHout(newBoard);
+			break;
+		case 2:
+			newBoard->f = newBoard->depth + getHmanhattan(newBoard);
+			break;
+		case 3:
+			newBoard->f = newBoard->depth + getHgreat2(newBoard);
+			break;
+		case 4:
+			newBoard->f = newBoard->depth + getHgreat3(newBoard);
+			break;
+		default:
+			printf("error\n");
+	}
 }
 
-/* h = 0 
+/* h = 0 */
 int getH(Board *board){
 	return 0;
-}*/
+}
 
-/* h = out of place 
-int getH(Board *board){
+/* h = out of place */
+int getHout(Board *board){
 	int h = 0;
 	int x, y;
 	for(x = 1; x <= SIZE; x++)
 		for(y = 1; y <= SIZE; y++)
-			if(board->tile[x][y] != goal->tile[x][y]) h++;
+			if(board->tile[x][y] != goal->tile[x][y]) 
+				if(board->tile[x][y] != 0) h++;
 	return h;
-}*/
+}
 
-/* h = Manhattan distance 
-int getH(Board *board){
+/* h = Manhattan distance */
+int getHmanhattan(Board *board){
 	int h = 0;
 	int x, bx, gx, y, by, gy, n;
 	for(n = 1; n < SIZE * SIZE; n++) {
@@ -120,10 +140,10 @@ int getH(Board *board){
 		h += abs(bx - gx) + abs(by - gy);
 	}
 	return h;
-}*/
+}
 
-/* h = greatest * 2 
-int getH(Board *board){
+/* h = greatest * 2 */
+int getHgreat2(Board *board){
 	int h = 0;
 	int x, bx, gx, y, by, gy, n;
 	for(n = 1; n < SIZE * SIZE; n++) {
@@ -147,10 +167,10 @@ int getH(Board *board){
 		else h += abs(by - gy) * 2;
 	}
 	return h;
-}*/
+}
 
 /* h = greatest * 3 */
-int getH(Board *board){
+int getHgreat3(Board *board){
 	int h = 0;
 	int x, bx, gx, y, by, gy, n;
 	for(n = 1; n < SIZE * SIZE; n++) {
@@ -183,7 +203,7 @@ void printBoard(Board *board){
 		for(x = 1; x <= SIZE; x++){
 			if(board->tile[x][y] > 0) printf("%d", board->tile[x][y]);
 			else printf(".");
-			if(x < SIZE) printf(" ");
+			//if(x < SIZE) printf(" ");
 		}
 		printf("\n");
 	}
@@ -196,6 +216,6 @@ void printPath(Board *board){
 		if(i > 0) printf(" ");
 		printf("%d", board->path[i]);
 	}
-	printf("\n");
+	printf("   ");
 }
 

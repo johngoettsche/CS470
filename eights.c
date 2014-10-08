@@ -13,6 +13,7 @@
 int success = 0;
 Board *solution = NULL;
 Board *goal;
+Board *start;
 /*
  * function reads standard input.
  */
@@ -28,7 +29,7 @@ char *readData(){
 	return nums;
 }
 
-Board *move(Node *current, Move thisMove){
+Board *move(Node *current, Move thisMove, int f){
 	Board *newBoard;
 	int x = thisMove.x;
 	int y = thisMove.y;
@@ -41,7 +42,7 @@ Board *move(Node *current, Move thisMove){
 		newBoard->tile[currentX + x][currentY + y] = current->b->tile[currentX][currentY];
 		newBoard->tile[currentX][currentY] = current->b->tile[currentX + x][currentY + y];
 		mov = newBoard->tile[currentX][currentY];
-		completeBoard(current->b, newBoard, mov);
+		completeBoard(current->b, newBoard, mov, f);
 		return newBoard;
 	}
 	return NULL;
@@ -50,20 +51,19 @@ Board *move(Node *current, Move thisMove){
 int main(){
 	//set up moves
 	Move moves[4] ={{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
-
+	
 	//set up hash table
 	HashTable *hashTable;
 	int tableSize = pow(SIZE, 6) - SIZE + 1;
-	hashTable = (HashTable *)createHashTable(tableSize);
 
 	int nos[SIZE * SIZE];
 	int g[SIZE * SIZE];
-	//char *nums = (char *)calloc(SIZE * SIZE, sizeof(char));
-	char nums[9] = {'7', '2', '4', '5', '6', '0', '8', '3', '1'};
-	//nums = readData();
-	//char *gl = (char *)calloc(SIZE * SIZE, sizeof(char));
-	char gl[9] =  {'2', '4', '1', '7', '8', '6', '5', '0', '3'};
-	//gl = eadData();
+	char *nums = (char *)calloc(SIZE * SIZE, sizeof(char));
+	//char nums[9] = {'7', '2', '4', '5', '6', '0', '8', '3', '1'};
+	nums = readData();
+	char *gl = (char *)calloc(SIZE * SIZE, sizeof(char));
+	//char gl[9] =  {'2', '4', '1', '7', '8', '6', '5', '0', '3'};
+	gl = readData();
 	int i;
 	//converts char* to int*
 	for(i = 0; i < SIZE * SIZE; i++) nos[i] = (int)nums[i] - '0';
@@ -73,52 +73,90 @@ int main(){
 	insertTiles(goal, g);
 	setNumbers(goal);
 	
-	Board *board = (Board *)calloc(1, sizeof(Board));
-	insertTiles(board, nos);
-	setNumbers(board);
-	board->depth = 0;
-	board->f = 0 + getH(board);
+	start = (Board *)calloc(1, sizeof(Board));
+	//Board *board = (Board *)calloc(1, sizeof(Board));
+	insertTiles(start, nos);
+	setNumbers(start);
+	start->depth = 0;
+	//start = board;
 	
 	solution = (Board *)calloc(1, sizeof(Board));
 	
 	printf("\nSTART:\n");
-	printBoard(board);
+	printBoard(start);
 	printf("\nGOAL:\n");
 	printBoard(goal);
 	
-	//set up queue
-	Queue *queue = (Queue *)createQueue();
-	int error = insert(queue, board);
-	Node *current;
-	Board *newBoard;
-	int m;
-	int fVal;
-	//iterate through queue until done
-	while(!success){	
-		current = queue->head;
-		for(m = 0; m < 4; m++){
-			if(!success) {
-				if((newBoard = (Board *)calloc(1, sizeof(Board))) == NULL) return 1;
-				if(newBoard = move(current, moves[m])){
-					if(newBoard->value == goal->value){
-						success = 1;
-						solution = newBoard;
+	Queue *queue;
+	
+	int f;
+	for (f = 0; f < 5; f++){
+		hashTable = (HashTable *)createHashTable(tableSize);
+		Board *board = (Board *)calloc(1, sizeof(Board));
+		board = start;
+		switch(f){
+			case 0:
+				board->f = getH(board);
+				break;
+			case 1:
+				board->f = getHout(board);
+				break;
+			case 2:
+				board->f = getHmanhattan(board);
+				break;
+			case 3:
+				board->f = getHgreat2(board);
+				break;
+			case 4:
+				board->f = getHgreat3(board);
+				break;
+			default:
+				printf("error\n");
+		}
+		//set up queue
+		queue = (Queue *)createQueue();
+		int error = insert(queue, board);
+		Node *current;
+		Board *newBoard;
+		int m;
+		int fVal;
+		int tries = 0;
+		//iterate through queue until done
+		while(!success){	
+			current = queue->head;
+			for(m = 0; m < 4; m++){
+				if(!success) {
+					if((newBoard = (Board *)calloc(1, sizeof(Board))) == NULL) return 1;
+					if(newBoard = move(current, moves[m], f)){
+						if(newBoard->value == goal->value){
+							success = 1;
+							solution = newBoard;
+						}
+						if((fVal = lookupBoard(hashTable, newBoard)) == -1){
+							tries++;
+							error = insert(queue, newBoard);
+							error = addBoard(hashTable, newBoard);
+						} else if(newBoard->f < fVal) {
+							tries++;
+							insert(queue, newBoard);
+						}
 					}
-					if((fVal = lookupBoard(hashTable, newBoard)) == -1){
-						error = insert(queue, newBoard);
-						error = addBoard(hashTable, newBoard);
-					} else if(newBoard->f < fVal) insert(queue, newBoard);
 				}
 			}
+			pop(queue);
+			if(queue->head == NULL)printf("Empty Queue\n");
 		}
-		pop(queue);
-		if(queue->head == NULL)printf("Empty Queue\n");
+		//print out results
+		printf("\nTRIES:  %d\n", tries);
+		printf("COST:  %d\n", solution->depth);
+		printf("EST. DIST. START TO GOAL:  %d\n", start->f);
+		printf("\nSOLUTION:  ");
+		printPath(solution);
+		int ql = getQueueLength(queue);
+		printf("QUEUE LEN:  %d\n", ql);
+		printBoard(solution);
+		success = 0;
+		solution = NULL;
 	}
-	//print out results
-	printf("\nSOLUTION:  ");
-	printPath(solution);
-	printf("NUM MOVES:  %d\n", solution->depth);
-	int ql = getQueueLength(queue);
-	printf("QUEUE LEN:  %d\n", ql);
 	return 0;
 }
