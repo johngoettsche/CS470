@@ -59,6 +59,27 @@ int insert(Queue *queue, Board *newBoard){
 	return 0;
 }
 
+int replace(Queue *queue, Board *newBoard){
+	Node *current = queue->head;
+	Node *newNode;
+	if((newNode = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
+	newNode->b = newBoard;
+	newNode->next = NULL;
+	while(current->b->f <= newBoard->f && current->next != NULL) 
+		current = current->next;
+	newNode->next = current->next;
+	current->next = newNode;
+	current = newNode->next;
+	if(newNode->next == NULL) {
+		queue->tail = newNode;
+	} 
+	while(current){
+		if(current->b->value == newNode->b->value) current->next = current->next->next;
+	}
+
+	return 0;
+}
+
 void pop(Queue *queue){
 	queue->head = queue->head->next;
 }
@@ -96,7 +117,7 @@ int lookupBoard(HashTable *hashTable, Board *board){
 	int hashValue = hash(hashTable, board);
 	for(list = hashTable->table[hashValue]; list != NULL; list = list->next){
 		if(board->value == list->b->value) {
-				return list->b->f;
+			return list->b->f;
 		}
 	}
 	return -1;

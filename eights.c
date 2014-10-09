@@ -54,7 +54,7 @@ int main(){
 	
 	//set up hash table
 	HashTable *hashTable;
-	int tableSize = pow(SIZE, 6) - SIZE + 1;
+	int tableSize = pow(SIZE, 10) - SIZE + 1;
 
 	int nos[SIZE * SIZE];
 	int g[SIZE * SIZE];
@@ -74,24 +74,17 @@ int main(){
 	setNumbers(goal);
 	
 	start = (Board *)calloc(1, sizeof(Board));
-	//Board *board = (Board *)calloc(1, sizeof(Board));
 	insertTiles(start, nos);
 	setNumbers(start);
 	start->depth = 0;
-	//start = board;
-	
-	solution = (Board *)calloc(1, sizeof(Board));
-	
-	printf("\nSTART:\n");
-	printBoard(start);
-	printf("\nGOAL:\n");
-	printBoard(goal);
 	
 	Queue *queue;
 	
 	int f;
 	for (f = 0; f < 5; f++){
+		success = 0;
 		hashTable = (HashTable *)createHashTable(tableSize);
+		solution = (Board *)calloc(1, sizeof(Board));
 		Board *board = (Board *)calloc(1, sizeof(Board));
 		board = start;
 		switch(f){
@@ -123,25 +116,32 @@ int main(){
 		int tries = 0;
 		//iterate through queue until done
 		while(!success){	
+	//printf("*");
 			current = queue->head;
-			for(m = 0; m < 4; m++){
-				if(!success) {
-					if((newBoard = (Board *)calloc(1, sizeof(Board))) == NULL) return 1;
-					if(newBoard = move(current, moves[m], f)){
-						if(newBoard->value == goal->value){
-							success = 1;
-							solution = newBoard;
-						}
-						if((fVal = lookupBoard(hashTable, newBoard)) == -1){
-							tries++;
-							error = insert(queue, newBoard);
-							error = addBoard(hashTable, newBoard);
-						} else if(newBoard->f < fVal) {
-							tries++;
-							insert(queue, newBoard);
+			if((fVal = lookupBoard(hashTable, current->b)) == -1){
+				//tries++;
+				error = addBoard(hashTable, current->b);
+				for(m = 0; m < 4; m++){
+					if(!success) {
+						if((newBoard = (Board *)calloc(1, sizeof(Board))) == NULL) return 1;
+						if(newBoard = move(current, moves[m], f)){
+							//tries++;
+							if(newBoard->value == goal->value){
+								success = 1;
+								solution = newBoard;
+							}
+							if((fVal = lookupBoard(hashTable, newBoard)) == -1){
+								tries++;
+								error = insert(queue, newBoard);
+								/*error = addBoard(hashTable, newBoard);*/
+							} else if(newBoard->f < fVal) {
+								tries++;
+								replace(queue, newBoard); 
+							} 
 						}
 					}
 				}
+			
 			}
 			pop(queue);
 			if(queue->head == NULL)printf("Empty Queue\n");
@@ -153,10 +153,8 @@ int main(){
 		printf("\nSOLUTION:  ");
 		printPath(solution);
 		int ql = getQueueLength(queue);
-		printf("QUEUE LEN:  %d\n", ql);
-		printBoard(solution);
-		success = 0;
-		solution = NULL;
+		printf("QUEUE LEN:  %d\n\n", ql);
+		//printBoard(solution);
 	}
-	return 0;
+	return 1;
 }
