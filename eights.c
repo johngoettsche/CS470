@@ -71,11 +71,9 @@ int main(){
 	start->depth = 0;
 	Queue *queue;
 	Board *newBoard;
-	//if((newBoard = (Board *)calloc(1, sizeof(Board))) == NULL) return 1;
 	int f;
 	for (f = 0; f < 5; f++){
 		success = 0;
-		//if(solution->depth == 29 && f == 1) f = f + 2;
 		hashTable = (HashTable *)createHashTable(tableSize);
 		queueTable = (HashTable *)createHashTable(tableSize);
 		solution = (Board *)calloc(1, sizeof(Board));
@@ -169,6 +167,10 @@ int main(){
 		freeQueue(queue);
 		free(queue);
 		free(hashTable);
+		free(queueTable);
+		hashTable = NULL;
+		queueTable = NULL;
+		queue = NULL;
 	}
 	return 1;
 }
