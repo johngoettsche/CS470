@@ -15,7 +15,6 @@ struct Node{
 typedef struct Queue Queue;
 struct Queue{
 	Node *head;
-	Node *tail;
 };
 
 typedef struct HashTable HashTable;
@@ -29,3 +28,15 @@ struct Move{
 	int x;
 	int y;
 };
+
+Queue *createQueue();
+int put(Queue *, Board *);
+int insert(Queue *, Board *);
+int replace(Queue *, Board *);
+void freeQueue(Queue *);
+void pop(Queue *);
+int getQueueLength(Queue *);
+HashTable *createHashTable(int);
+int hash(HashTable *, Board *);
+int lookupBoard(HashTable *, Board *);
+int addBoard(HashTable *, Board *);

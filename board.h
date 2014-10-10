@@ -17,3 +17,18 @@ struct Board{
 		int numbers[(SIZE * SIZE)]; //data transfer array
 		int tile[SIZE + 2][SIZE + 2]; //board configuration
 };
+
+extern Board *goal;
+
+void insertTiles(Board *, int *);
+void setNumbers(Board *);
+int setPatternValue(Board *);
+void completeBoard(Board *, Board *, int, int);
+int getH(Board *);
+int getHout(Board *);
+int getHmanhattan(Board *);
+int getHgreat2(Board *);
+int getHgreat3(Board *);
+void printBoard(Board *);
+Board *copyBoard(Board *);
+void printPath(Board *);

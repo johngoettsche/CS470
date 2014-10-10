@@ -11,12 +11,12 @@
 
 #include "board.h"
 
-extern Board *goal;
+//extern Board *goal;
 
 /* 
  * inserts the tile values from an array of integers as input.
  */
-insertTiles(Board *board, int *nums){
+void insertTiles(Board *board, int *nums){
 	int i = 0;
 	int y;
 	int x;
@@ -33,7 +33,7 @@ insertTiles(Board *board, int *nums){
  * of the board, it is used to transfer the configuration from
  * parent to child.
  */
-setNumbers(Board *board){
+void setNumbers(Board *board){
 	int i = 0;
 	int x, y;
 	for(y = 1; y <= SIZE; y++){
@@ -71,7 +71,6 @@ int setPatternValue(Board *board){
  */
 void completeBoard(Board *current, Board *newBoard, int mov, int f){
 	int i;
-	int h;
 	newBoard->depth = current->depth + 1;
 	newBoard->path = (int *)calloc(newBoard->depth, sizeof(int));
 	setNumbers(newBoard);
@@ -208,6 +207,25 @@ void printBoard(Board *board){
 		printf("\n");
 	}
 	//printf("%d\n", board->value);
+}
+
+Board *copyBoard(Board *board){
+	Board *newBoard;
+	if((newBoard = (Board *)calloc(1, sizeof(Board))) == NULL)return NULL;
+	newBoard->openX = board->openX; 
+	newBoard->openY = board->openY; 
+	newBoard->value = board->value; 
+	newBoard->depth = board->depth; 
+	newBoard->path = board->path; //*
+	newBoard->f = board->f;
+	newBoard->h = board->h; 
+	int i;
+	for(i = 0; i < SIZE * SIZE; i++) newBoard->numbers[i] = board->numbers[i]; //[(SIZE * SIZE)]; //data transfer array
+	int x, y;
+	for(x = 0; x <= SIZE + 1; x++)
+		for(y = 0; y <= SIZE +1; y++)
+			newBoard->tile[x][y] = board->tile[x][y]; //[SIZE + 2][SIZE + 2]; //board configuration
+	return newBoard;
 }
 
 void printPath(Board *board){
