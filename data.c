@@ -71,7 +71,7 @@ int replace(Queue *queue, Board *newBoard){
 	current = newNode->next;
 	while(current != NULL){
 		if(current->b->value == newNode->b->value) {
-			current->next = current->next->next;
+			if(current->next != NULL)current->next = current->next->next;
 		}
 		current = current->next;
 	}
@@ -135,16 +135,19 @@ int lookupBoard(HashTable *hashTable, Board *board){
 	return -1;
 }
 
-int addBoard(HashTable *hashTable, Board *board){
+int addBoard(HashTable *h_table, Board *board){
    Node *newList;
 	int exist;
-	int hashValue = hash(hashTable, board);
-	if((newList = (Node *)calloc(1, sizeof(Node))) == NULL) return 1;
-	if((exist = lookupBoard(hashTable, board)) == -1) {
+	int hashValue = hash(h_table, board);
+	if((newList = (Node *)calloc(1, sizeof(Node))) == NULL) {
+		printf("failed to create node for table\n");
+		return 1;
+	}
+	if((exist = lookupBoard(h_table, board)) == -1) {
 		newList->b = board;
-		newList->next = hashTable->table[hashValue];
-		hashTable->table[hashValue] = newList;
+		newList->next = h_table->table[hashValue];
+		h_table->table[hashValue] = newList;
 		return 0;
 	}
-	return 1;
+	return 0;
 }

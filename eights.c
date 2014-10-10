@@ -69,6 +69,10 @@ int main(){
 	insertTiles(start, nos);
 	setNumbers(start);
 	start->depth = 0;
+	printf("\nSTART:\n");
+	printBoard(start);
+	printf("\nGOAL:\n");
+	printBoard(goal);
 	Queue *queue;
 	Board *newBoard;
 	int f;
@@ -142,10 +146,7 @@ int main(){
 									printf("failed to replace with new board\n");
 									exit(1);
 								} 
-								if((error = addBoard(queueTable, newBoard)) == 1) {
-									printf("failed to insert new board to queue table after replace\n");
-									exit(1);
-								}
+								error = addBoard(queueTable, newBoard);
 							} else {
 								free(newBoard);
 							}
