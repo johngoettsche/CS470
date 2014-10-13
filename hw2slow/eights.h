@@ -14,9 +14,7 @@ int success = 0;
 Board *solution = NULL;
 Board *goal;
 Board *start;
-Board *heap[400000];
-int heapsize = 0;
 
 char *readData();
-Board *makeBoardOnMove(Board *, Move, int);
+Board *makeBoardOnMove(Node *, Move, int);
 int main();

@@ -71,7 +71,7 @@ int replace(Queue *queue, Board *newBoard){
 	current = newNode->next;
 	while(current != NULL){
 		if(current->b->value == newNode->b->value) {
-			if(current->next != NULL)current->next = current->next->next;/*********/
+			if(current->next != NULL)current->next = current->next->next;
 		}
 		current = current->next;
 	}
@@ -136,7 +136,7 @@ int lookupBoard(HashTable *hashTable, Board *board){
 }
 
 int addBoard(HashTable *h_table, Board *board){
-	Node *newList;
+   Node *newList;
 	int exist;
 	int hashValue = hash(h_table, board);
 	if((newList = (Node *)calloc(1, sizeof(Node))) == NULL) {
@@ -150,45 +150,4 @@ int addBoard(HashTable *h_table, Board *board){
 		return 0;
 	}
 	return 0;
-}
-
-void createHeap(){
-	heapsize = 0;
-}
-
-void insertHeap(Board *board){
-	int fval;
-	heapsize++;
-	if(heapsize == 1) heap[1] = board;
-	else {
-		heap[heapsize] = board;
-		int now = heapsize;
-		fval = heap[now/2]->f;
-		while(fval > board->f){ /*********/
-			heap[now] = heap[now/2];
-			//if(now >= 2) 
-				now /= 2;
-			//else break;
-			if(heap[now/2] != NULL) fval = heap[now/2]->f;
-			else fval = -1000000000;
-		}
-		heap[now] = board;
-	}
-}
-
-Board *popHeap(){
-	Board *minBoard;
-	Board *lastBoard;
-	int child, now;
-	minBoard = heap[1];
-	lastBoard = heap[heapsize--];
-	for(now = 1; now * 2 <= heapsize; now = child){
-		child = now * 2;
-		if(child != heapsize && heap[child + 1]->f < heap[child]->f) child++;
-		if(lastBoard->f > heap[child]->f) heap[now] = heap[child];
-		else break;
-	}
-	heap[now] = lastBoard;
-	//printf("%d\n", heapsize);
-	return minBoard;
 }
