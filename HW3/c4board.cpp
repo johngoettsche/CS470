@@ -235,12 +235,35 @@ int Board::pickRandomMove()
     return c;
 }
 
+int selectMove(int depth){
+	int pick;
+	if(!isBoardFull() && depth < 3){
+		eval = check();
+		if(!eval){
+			for(pick = 0; pick < width; pick++){
+				if(moveOK(pick)){
+					Board newBoard(name);
+					newBoard.paceMove(pick);
+					if(depth % 2 == 0) {
+						if(newBoard.check()) return pick;
+					} else {
+						if(!newBoard.check()) return pick;
+					}
+					int nextMove = selectMove(depth++);
+				}
+			}
+		}
+	}
+}
+
 // pick and place a random move
 void Board::playRandomMove()
 {
     int c;
 
-    c = pickRandomMove();
+    //c = pickRandomMove();
+	 
+	 c = selectMove();
     placeMove(c);
 //    cout << moveChar << ": Player " << name << " plays in column " << c+1 << endl;
 }
