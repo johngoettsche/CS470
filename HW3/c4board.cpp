@@ -235,25 +235,60 @@ int Board::pickRandomMove()
     return c;
 }
 
-int selectMove(int depth){
+int moveScore(int thisDepth){
+	char win;
 	int pick;
-	if(!isBoardFull() && depth < 3){
-		eval = check();
-		if(!eval){
-			for(pick = 0; pick < width; pick++){
-				if(moveOK(pick)){
-					Board newBoard(name);
-					newBoard.paceMove(pick);
-					if(depth % 2 == 0) {
-						if(newBoard.check()) return pick;
-					} else {
-						if(!newBoard.check()) return pick;
-					}
-					int nextMove = selectMove(depth++);
-				}
+	int score;
+	if(win = isWinner() == '\0') {
+		for(pick = 0; pick < width; pick++){
+			if(moveOK(pick)){
+				Board newBoard(name);
+				newBoard.paceMove(pick);
+				child[pick] = newBoard.moveScore(thisDepth++);
+				~newBoard;
+			} else {
+				if(depth % 2 == 0) child[pick] = -1000000;
+				else child[pick] = 1000000;
+			}
+		}
+		if(depth % 2 == 0) score = -100000;
+		else score = 100000;
+		for(pick = 0; pick < width; pick++){
+			if(thisDepth % 2 == 0){
+				if(child[pick] >= score)score = child[pick];
+			} else {
+				if(child[pick] <= score)score = child[pick];
+			}
+		}
+	} else {
+		if(win == 'O') score = -1 * pow(width, (depth - thisDepth));
+		else score = pow(width, (depth - thisDepth));
+	}
+	return score;
+}
+
+void selectMove(){
+	int score = -100000;
+	int select = -1;
+	int thisDepth = 0;
+	for(pick = 0; pick < width; pick++){
+		if(moveOK(pick)){
+			Board newBoard(name);
+			newBoard.paceMove(pick);
+			if(newBoard.isWinner() == 'X') return pick;
+			else {
+				child[pick] = newBoard.moveScore(thisDepth++);
+				~newBoard;
 			}
 		}
 	}
+	for(pick = 0; pick < width; pick++){
+		if(child[pick] > score){
+			select = pick;
+			score = child[pick]:
+		}
+	}
+	return select;
 }
 
 // pick and place a random move

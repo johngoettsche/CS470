@@ -22,6 +22,7 @@ class Board {
 private:
     static const int height = 6;
     static const int width = 7;
+	 static const int depth = 3;
 
 private:
     string name;                // name of player
@@ -29,6 +30,7 @@ private:
     int top[width];             // location of first empty cell in column
     char moveChar;              // character for next play
     int x, o;                   // number of x's and number of o's
+	 int child[width];
 
 public:
 	bool eval;
