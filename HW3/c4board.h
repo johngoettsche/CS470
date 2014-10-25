@@ -22,7 +22,7 @@ class Board {
 private:
     static const int height = 6;
     static const int width = 7;
-	 static const int depth = 3;
+	 static const int depth = 6;
 
 private:
     string name;                // name of player
@@ -53,4 +53,7 @@ public:
     bool isWinner(char c);
     Bit64 toBitstring(char piece);
 	 bool evaluate();
+	 int selectMove();
+	 int moveScore(int thisDepth);
+	 void copy(char source[height][width], int sourceTop[width]);
 };
