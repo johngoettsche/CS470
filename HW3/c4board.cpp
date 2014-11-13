@@ -102,9 +102,10 @@ bool Board::read()
 
     // get board
     int numlines;
-
+    cin.clear();
+	 
     numlines = 0;
-    for (; numlines<height; numlines++) {
+    for (; numlines<height + 1; numlines++) {
         cin >> line[numlines];
         if (line[numlines]=="--" || cin.eof()) {
             return false;   // immediate termination signal
@@ -248,9 +249,14 @@ int Board::pickRandomMove()
 int Board::moveScore(int thisDepth){
 	char win;
 	int pick;
-	int score = 0;
+	int score;
+	if(thisDepth % 2 == 0){
+		score = -2000000;
+	} else {
+		score = 2000000;
+	}
 	check();
-	if(win = isWinner() == '\0') {
+	if((win = isWinner()) == '\0') {
 		if(thisDepth < depth){
 			//score each move
 			for(pick = 0; pick < width; pick++){
@@ -260,33 +266,37 @@ int Board::moveScore(int thisDepth){
 					newBoard.placeMove(pick);
 					child[pick] = newBoard.moveScore(thisDepth + 1);	
 				} else {
+					//child[pick] = -2000000;
 					if(thisDepth % 2 == 0){
 						child[pick] = -1000000;
 					} else {
 						child[pick] = 1000000;
 					}
 				}
+				//cout << thisDepth << " - " << pick << " : " << child[pick] << endl;
 			}
 			//select best score for the move
 			for(pick = 0; pick < width; pick++){
+				//if(child[pick] >= score)score = child[pick];
 				if(thisDepth % 2 == 0){
-					if(child[pick] >= score)score = child[pick];
+					if(child[pick] >= score) score = child[pick];
 				} else {
-					if(child[pick] <= score)score = child[pick];
+					if(child[pick] <= score) score = child[pick];
 				}
+				//cout << thisDepth << " - " << pick << " : " << child[pick] << "score: " << score << endl;
 			}
-		} else score = 0;
+		} else score = width;
 	} else {
-		if(win == moveChar) score = pow(width, (depth - thisDepth));
-		else score = -1 * pow(width, (depth - thisDepth));
+		if(win == moveChar) score = pow(width, (depth - thisDepth + 1));
+		else score = -1 * pow(width, (depth - thisDepth + 1));
 	}
+	//cout << "\t" << thisDepth << "\t" << pick << ": " << score << endl;
 	return score;
 }
 
 int Board::selectMove(){
-	int x;
 	int pick;
-	int score = -200;
+	int score = -2000000;
 	int select = -1;
 	check();
 	for(pick = 0; pick < width; pick++){
@@ -296,16 +306,18 @@ int Board::selectMove(){
 			newBoard.placeMove(pick);
 			if(newBoard.isWinner() == moveChar) return pick;
 			else {
-				child[pick] = newBoard.moveScore(1);
+				child[pick] = newBoard.moveScore(1) - (int)abs((double)((width / 2) - pick));
 			}
 		}
 	}
 	for(pick = 0; pick < width; pick++){
-		if(child[pick] > score){
+		//cout << "\t" << pick << ": " << child[pick] << endl;
+		if(child[pick] > score && moveOK(pick)){
 			select = pick;
 			score = child[pick];
 		}
 	}
+	//cout << select << ": " << child[select] << endl;
 	return select;
 }
 

@@ -1,4 +1,4 @@
-BIN  = Donnie
+BIN  = hw4
 
 CC=g++
 SHELL=/bin/sh
@@ -10,18 +10,13 @@ CFLAGS=$(CPPFLAGS) -DCPLUSPLUS -DMallocHelp
 LIBS = -lm
 
 SRCS=\
-c4.cpp\
-c4board.cpp\
-rand.cpp
+Matrix.cpp
 
 HDRS=\
-rand.h\
-c4board.h
+Matrix.h
 
 OBJS=\
-c4.o\
-c4board.o\
-rand.o
+Matrix.o0
 
 $(BIN): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(BIN)

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "rand.h"
 
 typedef unsigned long long int Bit64;
