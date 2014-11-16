@@ -13,6 +13,7 @@ Matrix::Matrix(float input[], int h){
 Matrix::Matrix(int w, int h){
 	width = w;
 	height = h;
+	cout << w << ", " << h << endl;
 	srand(time(NULL));
 	for(h = 0; h < height; h++){
 		for(w = 0; w < width; w++){
@@ -55,6 +56,9 @@ Matrix Matrix::s(Matrix input){
 				for(int y = 0; y < height; y++){
 					sum += 4 * exp(-4 * (m[w][y] * input.m[h][y])) / pow((1 + exp(-4 * (m[w][y] * input.m[h][y]))), 2);
 				}
+				if(abs(sum) < 0.00001) sum = 0.0;
+				//if(sum > 100) sum = 100;
+				//if(sum < -100) sum = -100;
 				output.m[w][h] = sum;
 			}
 		}

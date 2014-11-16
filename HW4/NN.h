@@ -1,9 +1,12 @@
 #include<iostream> 
 #include<fstream>  
-#include<cstdlib>
+//#include<cstdlib>
 #include<string>
 #include<cctype>
-#include<cstdlib>
+
+#include<time.h>
+#include<stdio.h>
+#include<stdlib.h>
 
 #include "Matrix.h"
 
