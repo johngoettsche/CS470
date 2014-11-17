@@ -22,58 +22,75 @@ Matrix::Matrix(int w, int h){
 	}
 }
 
-Matrix Matrix::dotProduct(Matrix input){
-	if(height == input.height){
-		int newWidth = width;
-		int newHeight = input.width;
-		Matrix output(newWidth, newHeight);
-		float sum;
-		for(int h = 0; h < newHeight; h++){
-			for(int w = 0; w < newWidth; w++){
-				sum = 0;
-				for(int y = 0; y < height; y++){
-					sum += m[w][y] * input.m[h][y];
-				}
-				output.m[w][h] = sum;
-			}
-		}
-		return output;
-	} else {
-		cout << "Matrixies are not of the same height" << endl;
-		exit(1);
-	}
-}
-
-Matrix Matrix::s(Matrix input){
-	if(height == input.height){
-		int newWidth = width;
-		int newHeight = input.width;
-		Matrix output(newWidth, newHeight);
-		float sum;
-		for(int h = 0; h < newHeight; h++){
-			for(int w = 0; w < newWidth; w++){
-				sum = 0;
-				for(int y = 0; y < height; y++){
-					sum += 4 * exp(-4 * (m[w][y] * input.m[h][y])) / pow((1 + exp(-4 * (m[w][y] * input.m[h][y]))), 2);
-				}
-				if(abs(sum) < 0.00001) sum = 0.0;
-				//if(sum > 100) sum = 100;
-				//if(sum < -100) sum = -100;
-				output.m[w][h] = sum;
-			}
-		}
-		return output;
-	} else {
-		cout << "Matrixies are not of the same height" << endl;
-		exit(1);
-	}
-}
-
-Matrix Matrix::flip(){
-	Matrix output(height, width);
+Matrix::Matrix(Matrix *input){
+	width = input->width;
+	height = input->height;
 	for(int h = 0; h < height; h++){
 		for(int w = 0; w < width; w++){
-			output.m[h][w] = m[w][h];
+			m[w][h] = input->m[w][h];
+		}
+	}
+}
+
+Matrix::~Matrix(){
+	
+}
+
+Matrix *Matrix::dotProduct(Matrix *input){
+	if(height == input->height){
+		int newWidth = width;
+		int newHeight = input->width;
+		Matrix *output = new Matrix(newWidth, newHeight);
+		float sum;
+		for(int h = 0; h < newHeight; h++){
+			for(int w = 0; w < newWidth; w++){
+				sum = 0;
+				for(int y = 0; y < height; y++){
+					sum += m[w][y] * input->m[h][y];
+				}
+				if(abs(sum) < 0.001) sum = 0.0;
+				output->m[w][h] = sum;
+				if(output->m[w][h] > 2.0) output->m[w][h] = 2.0;
+				if(output->m[w][h] < -2.0) output->m[w][h] = -2.0;
+			}
+		}
+		return output;
+	} else {
+		cout << "Matrixies are not of the same height" << endl;
+		exit(1);
+	}
+}
+
+Matrix *Matrix::s(Matrix *input){
+	if(height == input->height){
+		int newWidth = width;
+		int newHeight = input->width;
+		Matrix *output = new Matrix(newWidth, newHeight);
+		float sum;
+		for(int h = 0; h < newHeight; h++){
+			for(int w = 0; w < newWidth; w++){
+				sum = 0;
+				for(int y = 0; y < height; y++){
+					sum += 4 * exp(-4 * (m[w][y] * input->m[h][y])) / pow((1 + exp(-4 * (m[w][y] * input->m[h][y]))), 2);
+				}
+				if(abs(sum) < 0.001) sum = 0.0;
+				output->m[w][h] = sum;
+				if(output->m[w][h] > 2.0) output->m[w][h] = 2.0;
+				if(output->m[w][h] < -2.0) output->m[w][h] = -2.0;
+			}
+		}
+		return output;
+	} else {
+		cout << "Matrixies are not of the same height" << endl;
+		exit(1);
+	}
+}
+
+Matrix *Matrix::flip(){
+	Matrix *output = new Matrix(height, width);
+	for(int h = 0; h < height; h++){
+		for(int w = 0; w < width; w++){
+			output->m[h][w] = m[w][h];
 		}
 	}
 	return output;
