@@ -8,7 +8,7 @@
 #include<stdlib.h>
 
 #include "Matrix.h"
-
+#include <ctime>
 using namespace std;
 
 //proto types

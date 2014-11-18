@@ -1,12 +1,13 @@
 #include "NN.h"
 
 int main(){
+	srand((unsigned)time(NULL));
 	const float alpha = 0.1;
 	const int I = 5;
 	const int J = 4;
 	const int K = 3;
-	float data[100][5];
-	int select;
+	float data[150][5];
+	int rnd;
 	int goal;
 	string line;
 	float input[I];
@@ -16,7 +17,7 @@ int main(){
 	float deltaA[J];
 	float sum;
 	
-	srand(time(NULL));
+	//srand((unsigned)time(NULL));
 		
 //read in data set	
 	ifstream in("irisClean.dat");
@@ -24,28 +25,31 @@ int main(){
 	in.close();
 	
 //set up weights
-	cout << "v:" << endl;
+	//cout << "v:" << endl;
 	Matrix *v = new Matrix(J, I);
-	v->print();
+	//v->print();
 	
-	cout << "w:" << endl;
+	//cout << "w:" << endl;
 	Matrix *w = new Matrix(K, J);
-	w->print();
-	for(int ev = 0; ev < 5; ev++){
-		//select a data set from training region
-		select = rand() % 100;
-		cout << ">" << select << "<" << endl;
+	//w->print();
+	
+	for(int ev = 0; ev < 50; ev++){
+		//rnd a data set from training region
+		//int rnd;
+		rnd = rand() % 100;
+		cout << ">" << rnd << "<" << endl;
+		cout << ">" << rand() % 100 << "<" << endl;
 		
 		input[0] = -1;
 		for(int i = 0; i < 4; i++){
-			input[i + 1] = data[select][i];
+			input[i + 1] = data[rnd][i];
 		}
-		goal = (int)data[select][4];
-		cout << "<" << goal << ">" << endl;
+		goal = (int)data[rnd][4];
+		//cout << "<" << goal << ">" << endl;
 		for(int k; k < K; k++) t[k] = 0.0;
 		t[goal] = 1.0;
 		
-		//for(int i = 0; i < 5; i++) cout << "| " << data[select][i] << endl; 
+		//for(int i = 0; i < 5; i++) cout << "| " << data[rnd][i] << endl; 
 	//forward
 		//cout << "x:" << endl;
 		Matrix *x = new Matrix(input, I);
@@ -63,19 +67,19 @@ int main(){
 		Matrix *a = new Matrix(data2, J);
 		//a->print();
 
-		cout << "y:" << endl;
+		//cout << "y:" << endl;
 		Matrix *y = new Matrix(a->s(w));
-		y->print();
+		//y->print();
 	
 	//back
 		//calculate deltaY
 		for(int k = 0; k < K; k++) {
-			cout << "(" << y->m[0][k] << " - " << t[k] << ") * (1 - " << y->m[0][k] << ") = " << (y->m[0][k] - t[k]) * y->m[0][k] * (1 - y->m[0][k]) << endl;
+			//cout << "(" << y->m[0][k] << " - " << t[k] << ") * (1 - " << y->m[0][k] << ") = " << (y->m[0][k] - t[k]) * y->m[0][k] * (1 - y->m[0][k]) << endl;
 			deltaY[k] = (y->m[0][k] - t[k]) * y->m[0][k] * (1 - y->m[0][k]);
 			if(abs(deltaY[k]) < 0.001) deltaY[k] = 0.0;
 		}
-		cout << "> ";
-		for(int k = 0; k < K; k++) cout << deltaY[k] << endl;
+		//cout << "> ";
+		//for(int k = 0; k < K; k++) cout << deltaY[k] << endl;
 		//calculate deltaA
 		for(int j = 0; j < J; j++) {
 			sum = 0.0;
@@ -86,33 +90,34 @@ int main(){
 			deltaA[j] = a->m[0][j] * (1 - a->m[0][j]) * sum; 
 			if(abs(deltaA[j]) < 0.001) deltaA[j] = 0.0;
 		}
-		cout << "< "; 
-		for(int j = 0; j < J; j++) cout << deltaA[j] << endl;
+		//cout << "< "; 
+		//for(int j = 0; j < J; j++) cout << deltaA[j] << endl;
 		//adjust w
 		for(int k = 0; k < K; k++){
 			for(int j = 0; j < J; j++){
-				cout << w->m[k][j] << " + (" << alpha << " * " << deltaY[k] << " * " << deltaA[j]  << ") = " << w->m[k][j] + (alpha * deltaY[k] * deltaA[j]) << endl;
+				//cout << w->m[k][j] << " + (" << alpha << " * " << deltaY[k] << " * " << deltaA[j]  << ") = " << w->m[k][j] + (alpha * deltaY[k] * deltaA[j]) << endl;
 				w->m[k][j] = w->m[k][j] + (alpha * deltaY[k] * deltaA[j]);
-				if(w->m[k][j] > 2.0) w->m[k][j] = 2.0;
-				if(w->m[k][j] < -2.0) w->m[k][j] = -2.0;
+				//if(w->m[k][j] > 2.0) w->m[k][j] = 2.0;
+				//if(w->m[k][j] < -2.0) w->m[k][j] = -2.0;
 			}
 		}
 		//adjust v
 		for(int j = 0; j < J; j++){
 			for(int i = 0; i < I; i++){
 				v->m[j][i] = v->m[j][i] + (alpha * deltaA[j] * x->m[0][i]);
-				if(v->m[j][i] > 2.0) v->m[j][i] = 2.0;
-				if(v->m[j][i] < -2.0) v->m[j][i] = -2.0;
+				//if(v->m[j][i] > 2.0) v->m[j][i] = 2.0;
+				//if(v->m[j][i] < -2.0) v->m[j][i] = -2.0;
 			}
 		}
 		delete x;
 		delete g;
 		delete a;
 		delete y;
+		//rnd = 0;
 	}
-	//cout << "v:" << endl;
-	//v->print();
+	cout << "v:" << endl;
+	v->print();
 	
-	//cout << "w:" << endl;
-	//w->print();
+	cout << "w:" << endl;
+	w->print();
 }
