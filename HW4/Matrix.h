@@ -2,6 +2,7 @@
 #include <iostream>
 #include <time.h>
 #include <cmath>
+#include <float.h>
 
 class Matrix {
 	public :

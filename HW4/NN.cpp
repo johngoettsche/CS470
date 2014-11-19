@@ -16,8 +16,6 @@ int main(){
 	float deltaY[K];
 	float deltaA[J];
 	float sum;
-	
-	//srand((unsigned)time(NULL));
 		
 //read in data set	
 	ifstream in("irisClean.dat");
@@ -25,99 +23,93 @@ int main(){
 	in.close();
 	
 //set up weights
-	//cout << "v:" << endl;
 	Matrix *v = new Matrix(J, I);
-	//v->print();
-	
-	//cout << "w:" << endl;
 	Matrix *w = new Matrix(K, J);
-	//w->print();
-	
-	for(int ev = 0; ev < 50; ev++){
-		//rnd a data set from training region
-		//int rnd;
+	for(int ev = 0; ev < 5000; ev++){
 		rnd = rand() % 100;
-		cout << ">" << rnd << "<" << endl;
-		cout << ">" << rand() % 100 << "<" << endl;
-		
 		input[0] = -1;
 		for(int i = 0; i < 4; i++){
 			input[i + 1] = data[rnd][i];
 		}
 		goal = (int)data[rnd][4];
-		//cout << "<" << goal << ">" << endl;
 		for(int k; k < K; k++) t[k] = 0.0;
 		t[goal] = 1.0;
-		
-		//for(int i = 0; i < 5; i++) cout << "| " << data[rnd][i] << endl; 
-	//forward
-		//cout << "x:" << endl;
 		Matrix *x = new Matrix(input, I);
-		//x->print();
-
-		//cout << "g:" << endl;
 		Matrix *g = new Matrix(x->s(v));
-		//g->print();
-		
-		//cout << "a:" << endl;
 		data2[0] = 0.5;
 		for(int i = 0; i < 3; i++){
 			data2[i + 1] = g->m[0][i];
 		}
 		Matrix *a = new Matrix(data2, J);
-		//a->print();
-
-		//cout << "y:" << endl;
 		Matrix *y = new Matrix(a->s(w));
-		//y->print();
 	
 	//back
 		//calculate deltaY
 		for(int k = 0; k < K; k++) {
-			//cout << "(" << y->m[0][k] << " - " << t[k] << ") * (1 - " << y->m[0][k] << ") = " << (y->m[0][k] - t[k]) * y->m[0][k] * (1 - y->m[0][k]) << endl;
 			deltaY[k] = (y->m[0][k] - t[k]) * y->m[0][k] * (1 - y->m[0][k]);
-			if(abs(deltaY[k]) < 0.001) deltaY[k] = 0.0;
+			if(abs(deltaY[k]) < 0.0000000001) deltaY[k] = 0.0;
 		}
-		//cout << "> ";
-		//for(int k = 0; k < K; k++) cout << deltaY[k] << endl;
 		//calculate deltaA
 		for(int j = 0; j < J; j++) {
 			sum = 0.0;
 			for(int k = 0; k < K; k++) {
-				//cout << w->m[k][j] << " * " << deltaY[k] << " = " << w->m[k][j] * deltaY[k] << endl;
 				sum += w->m[k][j] * deltaY[k];
 			}
 			deltaA[j] = a->m[0][j] * (1 - a->m[0][j]) * sum; 
-			if(abs(deltaA[j]) < 0.001) deltaA[j] = 0.0;
+			if(abs(deltaA[j]) < 0.0000000001) deltaA[j] = 0.0;
 		}
-		//cout << "< "; 
-		//for(int j = 0; j < J; j++) cout << deltaA[j] << endl;
 		//adjust w
 		for(int k = 0; k < K; k++){
 			for(int j = 0; j < J; j++){
-				//cout << w->m[k][j] << " + (" << alpha << " * " << deltaY[k] << " * " << deltaA[j]  << ") = " << w->m[k][j] + (alpha * deltaY[k] * deltaA[j]) << endl;
 				w->m[k][j] = w->m[k][j] + (alpha * deltaY[k] * deltaA[j]);
-				//if(w->m[k][j] > 2.0) w->m[k][j] = 2.0;
-				//if(w->m[k][j] < -2.0) w->m[k][j] = -2.0;
+				if(w->m[k][j] > FLT_MAX / 2.0) w->m[k][j] = FLT_MAX / 2.0;
+				if(w->m[k][j] < FLT_MIN / 2.0) w->m[k][j] = FLT_MIN / 2.0;
 			}
 		}
 		//adjust v
 		for(int j = 0; j < J; j++){
 			for(int i = 0; i < I; i++){
 				v->m[j][i] = v->m[j][i] + (alpha * deltaA[j] * x->m[0][i]);
-				//if(v->m[j][i] > 2.0) v->m[j][i] = 2.0;
-				//if(v->m[j][i] < -2.0) v->m[j][i] = -2.0;
+				if(v->m[j][i] > FLT_MAX / 2.0) v->m[j][i] = FLT_MAX / 2.0;
+				if(v->m[j][i] < FLT_MIN / 2.0) v->m[j][i] = FLT_MIN / 2.0;
 			}
 		}
 		delete x;
 		delete g;
 		delete a;
 		delete y;
-		//rnd = 0;
 	}
-	cout << "v:" << endl;
-	v->print();
+	//testing
+	int max;
+	int success = 0;
+	for(int ds = 100; ds < 150; ds++){
+		for(int i = 0; i < 4; i++){
+			input[i + 1] = data[ds][i];
+		}
+		goal = (int)data[ds][4];
+		Matrix *x = new Matrix(input, I);
+		Matrix *g = new Matrix(x->s(v));
+		data2[0] = 0.5;
+		for(int i = 0; i < 3; i++){
+			data2[i + 1] = g->m[0][i];
+		}
+		Matrix *a = new Matrix(data2, J);
+		Matrix *y = new Matrix(a->s(w));
+		max = 0;
+		float maxScore = 0;
+		for(int k = 0; k < K; k++){
+			if(y->m[0][k] > maxScore){
+				maxScore = y->m[0][k];
+				max = k;
+			}
+		}
+		delete x;
+		delete g;
+		delete a;
+		delete y;
+		//cout << max << " : " << goal << endl;
+		if(max == goal) success++;
+	}
 	
-	cout << "w:" << endl;
-	w->print();
+	cout << "success " << success / 50.00 << endl;
 }
