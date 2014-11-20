@@ -24,10 +24,14 @@ int main(){
 	
 //set up weights
 	Matrix *v = new Matrix(J, I);
+	cout << "v:" << endl;
+	v->print();
 	Matrix *w = new Matrix(K, J);
+	cout << "w:" << endl;
+	w->print();
 	for(int ev = 0; ev < 5000; ev++){
 		rnd = rand() % 100;
-		input[0] = -1;
+		input[0] = 1;
 		for(int i = 0; i < 4; i++){
 			input[i + 1] = data[rnd][i];
 		}
@@ -35,19 +39,33 @@ int main(){
 		for(int k; k < K; k++) t[k] = 0.0;
 		t[goal] = 1.0;
 		Matrix *x = new Matrix(input, I);
-		Matrix *g = new Matrix(x->s(v));
+		//cout << "x:" << endl;
+		//x->print();
+		Matrix *g = new Matrix(x->dotProduct(v));
+		g = g->flip();
+		g = g->s();
+		//cout << "v:" << endl;
+		//v->print();
+		//cout << "g:" << endl;
+		//g->print();
 		data2[0] = 0.5;
 		for(int i = 0; i < 3; i++){
 			data2[i + 1] = g->m[0][i];
 		}
 		Matrix *a = new Matrix(data2, J);
-		Matrix *y = new Matrix(a->s(w));
+		Matrix *y = new Matrix(a->dotProduct(w));
+		y = y->flip();
+		y = y->s();
+		//cout << "y:" << endl;
+		//y->print();
 	
 	//back
 		//calculate deltaY
+		//cout << "deltaY:" << endl;
 		for(int k = 0; k < K; k++) {
-			deltaY[k] = (y->m[0][k] - t[k]) * y->m[0][k] * (1 - y->m[0][k]);
+			deltaY[k] = (y->m[0][k] - t[k]) * y->m[0][k] * (1.0 - y->m[0][k]);
 			if(abs(deltaY[k]) < 0.0000000001) deltaY[k] = 0.0;
+			//cout << y->m[0][k] - t[k] << " : "<< deltaY[k] << endl;
 		}
 		//calculate deltaA
 		for(int j = 0; j < J; j++) {
@@ -88,13 +106,17 @@ int main(){
 		}
 		goal = (int)data[ds][4];
 		Matrix *x = new Matrix(input, I);
-		Matrix *g = new Matrix(x->s(v));
+		Matrix *g = new Matrix(x->dotProduct(v));
+		g = g->flip();
+		g = g->s();
 		data2[0] = 0.5;
 		for(int i = 0; i < 3; i++){
 			data2[i + 1] = g->m[0][i];
 		}
 		Matrix *a = new Matrix(data2, J);
-		Matrix *y = new Matrix(a->s(w));
+		Matrix *y = new Matrix(a->dotProduct(w));
+		y = y->flip();
+		y = y->s();
 		max = 0;
 		float maxScore = 0;
 		for(int k = 0; k < K; k++){
@@ -107,9 +129,12 @@ int main(){
 		delete g;
 		delete a;
 		delete y;
-		//cout << max << " : " << goal << endl;
+		cout << max << " : " << goal << endl;
 		if(max == goal) success++;
 	}
-	
+	cout << "v:" << endl;
+	v->print();
+	cout << "w:" << endl;
+	w->print();
 	cout << "success " << success / 50.00 << endl;
 }

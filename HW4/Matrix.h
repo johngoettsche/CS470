@@ -15,7 +15,7 @@ class Matrix {
 		Matrix (Matrix *input);
 		~Matrix();
 		Matrix *dotProduct(Matrix *input);
-		Matrix *s(Matrix *input);
+		Matrix *s();
 		Matrix *flip();
 		void print();
 };

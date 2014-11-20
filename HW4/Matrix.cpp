@@ -36,15 +36,16 @@ Matrix::~Matrix(){
 
 Matrix *Matrix::dotProduct(Matrix *input){
 	if(height == input->height){
-		int newWidth = width;
-		int newHeight = input->width;
+		int newWidth = input->width;
+		int newHeight = width;
 		Matrix *output = new Matrix(newWidth, newHeight);
 		float sum;
 		for(int h = 0; h < newHeight; h++){
 			for(int w = 0; w < newWidth; w++){
 				sum = 0;
 				for(int y = 0; y < height; y++){
-					sum += m[w][y] * input->m[h][y];
+					//cout << m[h][y] << " * " << input->m[w][y] << " = " << m[h][y] * input->m[w][y] << endl;
+					sum += m[h][y] * input->m[w][y];
 				}
 				if(abs(sum) < 0.0000000001) sum = 0.0;
 				output->m[w][h] = sum;
@@ -59,31 +60,19 @@ Matrix *Matrix::dotProduct(Matrix *input){
 	}
 }
 
-Matrix *Matrix::s(Matrix *input){
-	if(height == input->height){
-		int newWidth = width;
-		int newHeight = input->width;
-		Matrix *output = new Matrix(newWidth, newHeight);
-		float sum;
-		for(int h = 0; h < newHeight; h++){
-			for(int w = 0; w < newWidth; w++){
-				sum = 0;
-				for(int y = 0; y < height; y++){
-					if (abs(-4 * exp(-4 * (m[w][y] * input->m[h][y]))) > 0.0000000001)
-						sum += 1 / (-4 * exp(-4 * (m[w][y] * input->m[h][y])));
-					else sum = 1000000000;
-				}
-				if(abs(sum) < 0.0000000001) sum = 0.0;
-				output->m[w][h] = sum;
-				if(output->m[w][h] > FLT_MAX / 2.0) output->m[w][h] = FLT_MAX / 2.0;
-				if(output->m[w][h] < FLT_MIN / 2.0) output->m[w][h] = FLT_MIN / 2.0;
-			}
+Matrix *Matrix::s(){
+	Matrix *output = new Matrix(width, height);
+	for(int h = 0; h < height; h++){
+		for(int w = 0; w < width; w++){
+			if (abs(1 + exp(-4 * m[w][h])) > 0.0000000001)
+				output->m[w][h] = 1 / (1 + exp(-4 * m[w][h]));
+			else output->m[w][h] = 1.0;
+			if(abs(output->m[w][h]) < 0.0000000001) output->m[w][h] = 0.0;
+			if(output->m[w][h] > FLT_MAX / 2.0) output->m[w][h] = FLT_MAX / 2.0;
+			if(output->m[w][h] < FLT_MIN / 2.0) output->m[w][h] = FLT_MIN / 2.0;
 		}
-		return output;
-	} else {
-		cout << "Matrixies are not of the same height" << endl;
-		exit(1);
 	}
+	return output;
 }
 
 Matrix *Matrix::flip(){
