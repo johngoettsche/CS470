@@ -13,4 +13,9 @@
 using namespace std;
 
 //proto types
+/*
+ * function reads standard input.
+ */
+ 
+float checkLimit(float val);
 int main();

@@ -1,4 +1,4 @@
-BIN  = hw4
+BIN  = nn
 
 CC=g++
 SHELL=/bin/sh
@@ -10,7 +10,7 @@ CFLAGS=$(CPPFLAGS) -DCPLUSPLUS -DMallocHelp
 LIBS = -lm
 
 SRCS=\
-NN.ccp\
+NN.cpp\
 Matrix.cpp
 
 HDRS=\

@@ -36,6 +36,11 @@ Matrix::~Matrix(){
 
 Matrix *Matrix::dotProduct(Matrix *input){
 	if(height == input->height){
+	//cout << "------------------" << endl;
+	//print();
+	//cout << "==================" << endl;
+	//input->print();
+	//cout << "------------------" << endl;
 		int newWidth = input->width;
 		int newHeight = width;
 		Matrix *output = new Matrix(newWidth, newHeight);
@@ -44,13 +49,14 @@ Matrix *Matrix::dotProduct(Matrix *input){
 			for(int w = 0; w < newWidth; w++){
 				sum = 0;
 				for(int y = 0; y < height; y++){
-					//cout << m[h][y] << " * " << input->m[w][y] << " = " << m[h][y] * input->m[w][y] << endl;
+					//cout << m[h][y] << " * " << input->m[w][y] << " = " << m[h][y] * input->m[w][y] << " == ";
 					sum += m[h][y] * input->m[w][y];
+					//cout << sum << endl;
 				}
-				if(abs(sum) < 0.0000000001) sum = 0.0;
+				//if(abs(sum) < 0.0000000001) sum = 0.0;
 				output->m[w][h] = sum;
-				if(output->m[w][h] > FLT_MAX / 2.0) output->m[w][h] = FLT_MAX / 2.0;
-				if(output->m[w][h] < FLT_MIN / 2.0) output->m[w][h] = FLT_MIN / 2.0;
+				//if(output->m[w][h] > FLT_MAX / 2.0) output->m[w][h] = FLT_MAX / 2.0;
+				//if(output->m[w][h] < FLT_MIN / 2.0) output->m[w][h] = FLT_MIN / 2.0;
 			}
 		}
 		return output;
