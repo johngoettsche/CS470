@@ -14,6 +14,7 @@ class Matrix {
 		Matrix (int w, int h);
 		Matrix (Matrix *input);
 		~Matrix();
+		Matrix *mult(Matrix *input);
 		Matrix *dotProduct(Matrix *input);
 		Matrix *s();
 		Matrix *flip();

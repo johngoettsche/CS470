@@ -1,8 +1,8 @@
 #include<iostream> 
 #include<fstream>  
-#include<string>
+//#include<string>
 #include<cctype>
-
+#include<string.h>
 #include<time.h>
 #include<stdio.h>
 #include<stdlib.h>

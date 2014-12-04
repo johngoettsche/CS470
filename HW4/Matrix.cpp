@@ -15,7 +15,7 @@ Matrix::Matrix(int w, int h){
 	height = h;
 	for(h = 0; h < height; h++){
 		for(w = 0; w < width; w++){
-			m[w][h] = rand()/float(RAND_MAX);
+			m[w][h] = (2 * rand()/float(RAND_MAX)) - 1;
 		}
 	}
 }
@@ -32,6 +32,16 @@ Matrix::Matrix(Matrix *input){
 
 Matrix::~Matrix(){
 	
+}
+
+Matrix *Matrix::mult(Matrix *input){
+	Matrix *output = new Matrix(width, height);
+	for(int h = 0; h < height; h++){
+		for(int w = 0; w < width; w++){
+			output->m[w][h] = m[w][h] * input->m[w][h];
+		}
+	}
+	return output;
 }
 
 Matrix *Matrix::dotProduct(Matrix *input){
@@ -59,6 +69,7 @@ Matrix *Matrix::dotProduct(Matrix *input){
 				//if(output->m[w][h] < FLT_MIN / 2.0) output->m[w][h] = FLT_MIN / 2.0;
 			}
 		}
+		output = output->flip();
 		return output;
 	} else {
 		cout << "Matrixies are not of the same height" << endl;
