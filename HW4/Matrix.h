@@ -15,6 +15,8 @@ class Matrix {
 		Matrix (Matrix *input);
 		~Matrix();
 		Matrix *mult(Matrix *input);
+		Matrix *mult(float input);
+		Matrix *add(Matrix *input);
 		Matrix *dotProduct(Matrix *input);
 		Matrix *s();
 		Matrix *flip();

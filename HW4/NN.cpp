@@ -1,9 +1,9 @@
 #include "NN.h"
 
-#define SHOW_PROG 1
+#define SHOW_PROG 0
 #define SHOW_TEST 1
 #define SHOW_WEIGHT 0
-#define ITERATIONS 1
+#define ITERATIONS 50000
 #define SUBMIT 0
 #define BIAS -1
 
@@ -103,6 +103,7 @@ int main(){
 		
 //set up weights
 	Matrix *v = new Matrix(J, I);
+	for(int j = 0; j < J; j++) v->m[0][j] = 0.0;
 	Matrix *w = new Matrix(K, J);
 	Matrix *tempMatrix;
 	if(SHOW_WEIGHT){
@@ -167,23 +168,17 @@ int main(){
 		
 		//adjust w
 		tempMatrix = deltaY->flip()->dotProduct(a->flip());
+		tempMatrix = tempMatrix->mult(alpha);
 			if(SHOW_PROG)cout << "tempMatrix - w" << endl;
 			if(SHOW_PROG)tempMatrix->print();
-		for(int k = 0; k < K; k++){
-			for(int j = 0; j < J; j++){
-				w->m[k][j] += alpha * tempMatrix->m[0][j];
-			}
-		}
+		w = w->add(tempMatrix);
 		//adjust v
 		deltaA->m[0][0] = 0.0;
 		tempMatrix = deltaA->flip()->dotProduct(x->flip());
+		tempMatrix = tempMatrix->mult(alpha);
 			if(SHOW_PROG)cout << "tempMatrix - v" << endl;
 			if(SHOW_PROG)tempMatrix->print();
-		for(int j = 0; j < J; j++){
-			for(int i = 0; i < I; i++){
-				v->m[j][i] += alpha * tempMatrix->m[j][i];
-			}
-		}
+		v = v->add(tempMatrix);
 		delete x;
 		delete g;
 		delete a;
@@ -275,10 +270,10 @@ int main(){
 			if(goal == max) success++;
 		}
 		if(SHOW_TEST)cout << max << " : " << goal << endl;
-		//cout << "TEST(" << count << "): " << max << endl;
+		if(SUBMIT)cout << "TEST(" << count << "): " << max << endl;
 		count++;
 	}
-	cout << "success " << success << " out of " << count << " or " << 100 * (float)success / (float)count << "%" << endl;
+	//cout << "success " << success << " out of " << count << " or " << 100 * (float)success / (float)count << "%" << endl;
 	if(SHOW_WEIGHT){
 		cout << "\nw" << endl;
 		w->print();

@@ -44,6 +44,26 @@ Matrix *Matrix::mult(Matrix *input){
 	return output;
 }
 
+Matrix *Matrix::mult(float input){
+	Matrix *output = new Matrix(width, height);
+	for(int h = 0; h < height; h++){
+		for(int w = 0; w < width; w++){
+			output->m[w][h] = m[w][h] * input;
+		}
+	}
+	return output;
+}
+
+Matrix *Matrix::add(Matrix *input){
+	Matrix *output = new Matrix(width, height);
+	for(int h = 0; h < height; h++){
+		for(int w = 0; w < width; w++){
+			output->m[w][h] = m[w][h] + input->m[w][h];
+		}
+	}
+	return output;
+}
+
 Matrix *Matrix::dotProduct(Matrix *input){
 	if(height == input->height){
 	//cout << "------------------" << endl;
