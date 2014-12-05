@@ -3,7 +3,7 @@
 #define SHOW_PROG 0
 #define SHOW_TEST 0
 #define SHOW_WEIGHT 0
-#define ITERATIONS 200000
+#define ITERATIONS 100000
 #define SUBMIT 1
 #define BIAS -1
 
@@ -24,7 +24,7 @@ char *readData(){
 
 int main(){
 	srand((unsigned)time(NULL));
-	const float alpha = 0.1;
+	const float alpha = 0.15;
 	const int I = 5;
 	const int J = 4;
 	const int K = 3;
@@ -155,6 +155,7 @@ int main(){
 				
 		//calculate deltaA
 		Matrix *deltaA = new Matrix(a);
+		tempMatrix = new Matrix(a);
 		tempMatrix = deltaY->dotProduct(w->flip());
 			if(SHOW_PROG)cout << "tempMatrix - deltaA" << endl;
 			if(SHOW_PROG)tempMatrix->print();
@@ -167,18 +168,28 @@ int main(){
 			if(SHOW_PROG)deltaA->print();
 		
 		//adjust w
+		tempMatrix = new Matrix(w);
 		tempMatrix = deltaY->flip()->dotProduct(a->flip());
 		tempMatrix = tempMatrix->mult(alpha);
 			if(SHOW_PROG)cout << "tempMatrix - w" << endl;
 			if(SHOW_PROG)tempMatrix->print();
-		w = w->add(tempMatrix);
+		tempMatrix = w->add(tempMatrix);
+		w = new Matrix(w);
+		for(int r = 0 ; r < tempMatrix->height; r++)
+			for(int c = 0; c < tempMatrix->width; c++)
+				w->m[c][r] = tempMatrix->m[c][r];
 		//adjust v
 		deltaA->m[0][0] = 0.0;
+		tempMatrix = new Matrix(v);
 		tempMatrix = deltaA->flip()->dotProduct(x->flip());
 		tempMatrix = tempMatrix->mult(alpha);
 			if(SHOW_PROG)cout << "tempMatrix - v" << endl;
 			if(SHOW_PROG)tempMatrix->print();
-		v = v->add(tempMatrix);
+		tempMatrix = v->add(tempMatrix);
+		v = new Matrix(v);
+		for(int r = 0 ; r < tempMatrix->height; r++)
+			for(int c = 0; c < tempMatrix->width; c++)
+				v->m[c][r] = tempMatrix->m[c][r];
 		delete x;
 		delete g;
 		delete a;
