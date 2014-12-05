@@ -1,10 +1,10 @@
 #include "NN.h"
 
 #define SHOW_PROG 0
-#define SHOW_TEST 1
+#define SHOW_TEST 0
 #define SHOW_WEIGHT 0
-#define ITERATIONS 50000
-#define SUBMIT 0
+#define ITERATIONS 200000
+#define SUBMIT 1
 #define BIAS -1
 
 float checkLimit(float val){
@@ -273,7 +273,7 @@ int main(){
 		if(SUBMIT)cout << "TEST(" << count << "): " << max << endl;
 		count++;
 	}
-	//cout << "success " << success << " out of " << count << " or " << 100 * (float)success / (float)count << "%" << endl;
+	if(SHOW_TEST)cout << "success " << success << " out of " << count << " or " << 100 * (float)success / (float)count << "%" << endl;
 	if(SHOW_WEIGHT){
 		cout << "\nw" << endl;
 		w->print();
