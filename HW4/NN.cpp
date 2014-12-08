@@ -1,10 +1,10 @@
 #include "NN.h"
 
 #define SHOW_PROG 0
-#define SHOW_TEST 0
+#define SHOW_TEST 1
 #define SHOW_WEIGHT 0
-#define ITERATIONS 100000
-#define SUBMIT 1
+#define ITERATIONS 50000
+#define SUBMIT 0
 #define BIAS -1
 
 float checkLimit(float val){
@@ -145,8 +145,8 @@ int main(){
 		//calculate deltaY
 		Matrix *deltaY = new Matrix(y);
 		for(int k = 0; k < K; k++) {
-			//deltaY->m[0][k] = (t[k] - y->m[0][k]) * y->m[0][k] * (1.0 - y->m[0][k]);
-			deltaY->m[0][k] = (t[k] - y->m[0][k]);
+			deltaY->m[0][k] = (t[k] - y->m[0][k]) * y->m[0][k] * (1.0 - y->m[0][k]);
+			//deltaY->m[0][k] = (t[k] - y->m[0][k]);
 		}
 			if(SHOW_PROG)cout << "y" << endl;
 			if(SHOW_PROG)y->print();
@@ -155,41 +155,48 @@ int main(){
 				
 		//calculate deltaA
 		Matrix *deltaA = new Matrix(a);
+		//delete tempMatrix;
 		tempMatrix = new Matrix(a);
 		tempMatrix = deltaY->dotProduct(w->flip());
 			if(SHOW_PROG)cout << "tempMatrix - deltaA" << endl;
 			if(SHOW_PROG)tempMatrix->print();
 		for(int j = 0; j < J; j++) {
-			//deltaA->m[0][j] = (a->m[0][j] * (1 - a->m[0][j])) * tempMatrix->m[0][j]; 
-			deltaA->m[0][j] = tempMatrix->m[0][j]; 
+			deltaA->m[0][j] = (a->m[0][j] * (1 - a->m[0][j])) * tempMatrix->m[0][j]; 
+			//deltaA->m[0][j] = tempMatrix->m[0][j]; 
 		}
 			//deltaA->m[0][0] = 0.0;
 			if(SHOW_PROG)cout << "deltaA" << endl;
 			if(SHOW_PROG)deltaA->print();
 		
 		//adjust w
+		delete tempMatrix;
 		tempMatrix = new Matrix(w);
 		tempMatrix = deltaY->flip()->dotProduct(a->flip());
 		tempMatrix = tempMatrix->mult(alpha);
 			if(SHOW_PROG)cout << "tempMatrix - w" << endl;
 			if(SHOW_PROG)tempMatrix->print();
-		tempMatrix = w->add(tempMatrix);
-		w = new Matrix(w);
-		for(int r = 0 ; r < tempMatrix->height; r++)
+		//tempMatrix = w->add(tempMatrix);
+		w = w->add(tempMatrix);
+		//delete w;
+		//w = new Matrix(K, J);
+		/*for(int r = 0 ; r < tempMatrix->height; r++)
 			for(int c = 0; c < tempMatrix->width; c++)
-				w->m[c][r] = tempMatrix->m[c][r];
+				w->m[c][r] = tempMatrix->m[c][r];*/
 		//adjust v
 		deltaA->m[0][0] = 0.0;
+		delete tempMatrix;
 		tempMatrix = new Matrix(v);
 		tempMatrix = deltaA->flip()->dotProduct(x->flip());
 		tempMatrix = tempMatrix->mult(alpha);
 			if(SHOW_PROG)cout << "tempMatrix - v" << endl;
 			if(SHOW_PROG)tempMatrix->print();
-		tempMatrix = v->add(tempMatrix);
-		v = new Matrix(v);
-		for(int r = 0 ; r < tempMatrix->height; r++)
+		//tempMatrix = v->add(tempMatrix);
+		v = v->add(tempMatrix);
+		//delete v;
+		//v = new Matrix(J, I);
+		/*for(int r = 0 ; r < tempMatrix->height; r++)
 			for(int c = 0; c < tempMatrix->width; c++)
-				v->m[c][r] = tempMatrix->m[c][r];
+				v->m[c][r] = tempMatrix->m[c][r];*/
 		delete x;
 		delete g;
 		delete a;
@@ -197,6 +204,7 @@ int main(){
 		delete y;
 		delete deltaA;
 		delete deltaY;
+		delete tempMatrix;
 	}
 	//testing
 	int max;
@@ -266,7 +274,7 @@ int main(){
 		Matrix *y = h->s();
 		max = 0;
 		float maxScore = 0;
-		if(SHOW_TEST)cout << y->m[0][0] << " : "  << y->m[0][1] << " : " << y->m[0][2] << " || ";
+		//if(SHOW_TEST)cout << y->m[0][0] << " : "  << y->m[0][1] << " : " << y->m[0][2] << " || ";
 		for(int k = 0; k < K; k++){
 			if(y->m[0][k] > maxScore){
 				maxScore = y->m[0][k];
@@ -280,7 +288,7 @@ int main(){
 		if(!SUBMIT){
 			if(goal == max) success++;
 		}
-		if(SHOW_TEST)cout << max << " : " << goal << endl;
+		if(SHOW_TEST)cout << "TEST(" << max << ")  GOAL:" << goal << endl;
 		if(SUBMIT)cout << "TEST(" << count << "): " << max << endl;
 		count++;
 	}
