@@ -1,10 +1,10 @@
 #include "NN.h"
 
 #define SHOW_PROG 0
-#define SHOW_TEST 0
+#define SHOW_TEST 1
 #define SHOW_WEIGHT 0
 #define ITERATIONS 50000
-#define SUBMIT 1
+#define SUBMIT 0
 #define BIAS -1
 
 float checkLimit(float val){
@@ -276,27 +276,14 @@ int main(){
 		}
 		//cout << "input " << ds << ": " << input[0] << " " << input[1] << " " << input[2] << " " << input[3] << " " << input[4] << endl; 
 		Matrix *x = new Matrix(input, I);
-			if(SHOW_PROG)cout << "x" << endl;
-			if(SHOW_PROG)x->print();
 		Matrix *g = new Matrix(x->dotProduct(v));
-			if(SHOW_PROG)cout << "g" << endl;
-			if(SHOW_PROG)g->print();
 		Matrix *a = g->s();
 		a->m[0][0] = BIAS;
-			if(SHOW_PROG)cout << "a" << endl;
-			if(SHOW_PROG)a->print();
 		Matrix *h = new Matrix(a->dotProduct(w));
-			if(SHOW_PROG)cout << "h" << endl;
-			if(SHOW_PROG)h->print();
 		Matrix *y = h->s();
-			if(SHOW_PROG)cout << "y" << endl;
-			if(SHOW_PROG)y->print();
-			if(SHOW_PROG)cout << "t" << endl;
-			if(SHOW_PROG)for(int k = 0; k < K; k++)cout << t[k] << endl;
-			if(SHOW_PROG)cout << "\nBACK" << endl;
 		max = 0;
 		float maxScore = 0;
-		if(SHOW_TEST)cout << y->m[0][0] << " : "  << y->m[0][1] << " : " << y->m[0][2] << " || ";
+		//if(SHOW_TEST)cout << y->m[0][0] << " : "  << y->m[0][1] << " : " << y->m[0][2] << " || ";
 		for(int k = 0; k < K; k++){
 			if(y->m[0][k] > maxScore){
 				maxScore = y->m[0][k];

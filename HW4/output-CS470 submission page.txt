@@ -1,0 +1,160 @@
+=================================================
+Output of Building User Code
+Exploding tar files
+20141210175700-jgoettsche-CS470-F14-A4.tar
+makefile
+NN.cpp
+Matrix.cpp
+NN.h
+Matrix.h
+Move and extract test files and build test equipment
+README
+iris.dat
+iristest.dat
+test.out
+Make the user's program
+g++  -g -Wall  -c -o NN.o NN.cpp
+g++  -g -Wall  -c -o Matrix.o Matrix.cpp
+g++ -g -Wall -DCPLUSPLUS -DMallocHelp  NN.o Matrix.o -lm -o nn
+remove Tmp dir contents
+Was a program called nn built?
+-rwxr-xr-x. 1 nibbler nibbler 78015 Dec 10 18:00 nn
+
+END OF BUILD
+=================================================
+Complete Output of Testing
+Wed Dec 10 18:00:02 PST 2014
+This is an experimental version of the tests to see if
+a competition can be run via the test engine.  Time will
+be made longer later in the week if it appears that it is needed.
+
+Limited to 20 seconds total run time and 2000 lines of output
+
+* ================================================ *
+|      Tests for CS470 Assignment 4                |
+|       There is No comparison with Expected Output|
+* ================================================ *
+BEGIN TEST =========
+TEST(0): 0
+TEST(1): 0
+TEST(2): 0
+TEST(3): 0
+TEST(4): 0
+TEST(5): 0
+TEST(6): 0
+TEST(7): 0
+TEST(8): 0
+TEST(9): 0
+TEST(10): 0
+TEST(11): 0
+TEST(12): 0
+TEST(13): 0
+TEST(14): 0
+TEST(15): 0
+TEST(16): 0
+TEST(17): 0
+TEST(18): 0
+TEST(19): 0
+TEST(20): 0
+TEST(21): 0
+TEST(22): 0
+TEST(23): 0
+TEST(24): 0
+TEST(25): 0
+TEST(26): 0
+TEST(27): 0
+TEST(28): 0
+TEST(29): 0
+TEST(30): 0
+TEST(31): 0
+TEST(32): 0
+TEST(33): 0
+TEST(34): 0
+TEST(35): 0
+TEST(36): 0
+TEST(37): 0
+TEST(38): 0
+TEST(39): 0
+TEST(40): 0
+TEST(41): 0
+TEST(42): 0
+TEST(43): 0
+TEST(44): 0
+TEST(45): 0
+TEST(46): 0
+TEST(47): 0
+TEST(48): 0
+TEST(49): 0
+TEST(50): 0
+TEST(51): 0
+TEST(52): 0
+TEST(53): 0
+
+END OF TESTS
+Cleaning up
+=================================================
+The compare script will extract those lines that contain the string 'TEST'
+then do the compare.
+
+ztest zexpected differ: char 1, line 1
+
+Your output differs from the expected output.
+digits in the day and time were changed to # for comparison.
+This is a two column comparison with YOUR OUTPUT ON THE LEFT
+with the EXPECTED OUTPUT ON THE RIGHT.
+BEGIN TEST =========								    |	TEST(0): 1
+TEST(0): 0									    |	TEST(1): 1
+TEST(1): 0									    |	TEST(2): 1
+TEST(2): 0									    |	TEST(3): 1
+TEST(3): 0									    |	TEST(4): 1
+TEST(4): 0									    |	TEST(5): 1
+TEST(5): 0									    |	TEST(6): 1
+TEST(6): 0									    |	TEST(7): 1
+TEST(7): 0									    <
+TEST(8): 0										TEST(8): 0
+TEST(9): 0										TEST(9): 0
+TEST(10): 0										TEST(10): 0
+TEST(11): 0										TEST(11): 0
+TEST(12): 0									    |	TEST(12): 1
+TEST(13): 0									    |	TEST(13): 2
+TEST(14): 0									    |	TEST(14): 2
+TEST(15): 0									    |	TEST(15): 2
+TEST(16): 0									    |	TEST(16): 1
+TEST(17): 0									    |	TEST(17): 1
+TEST(18): 0									    |	TEST(18): 1
+TEST(19): 0									    |	TEST(19): 1
+TEST(20): 0										TEST(20): 0
+TEST(21): 0										TEST(21): 0
+TEST(22): 0									    |	TEST(22): 1
+TEST(23): 0										TEST(23): 0
+TEST(24): 0										TEST(24): 0
+TEST(25): 0										TEST(25): 0
+TEST(26): 0										TEST(26): 0
+TEST(27): 0										TEST(27): 0
+TEST(28): 0										TEST(28): 0
+TEST(29): 0										TEST(29): 0
+TEST(30): 0										TEST(30): 0
+TEST(31): 0										TEST(31): 0
+TEST(32): 0										TEST(32): 0
+TEST(33): 0										TEST(33): 0
+TEST(34): 0									    |	TEST(34): 1
+TEST(35): 0									    |	TEST(35): 1
+TEST(36): 0									    |	TEST(36): 1
+TEST(37): 0									    |	TEST(37): 1
+TEST(38): 0									    |	TEST(38): 1
+TEST(39): 0									    |	TEST(39): 1
+TEST(40): 0									    |	TEST(40): 1
+TEST(41): 0									    |	TEST(41): 1
+TEST(42): 0									    |	TEST(42): 1
+TEST(43): 0									    |	TEST(43): 1
+TEST(44): 0									    |	TEST(44): 2
+TEST(45): 0									    |	TEST(45): 2
+TEST(46): 0									    |	TEST(46): 2
+TEST(47): 0									    |	TEST(47): 2
+TEST(48): 0									    |	TEST(48): 2
+TEST(49): 0									    |	TEST(49): 2
+TEST(50): 0									    |	TEST(50): 2
+TEST(51): 0									    |	TEST(51): 2
+TEST(52): 0									    |	TEST(52): 2
+TEST(53): 0									    |	TEST(53): 2
+END OF TESTS
