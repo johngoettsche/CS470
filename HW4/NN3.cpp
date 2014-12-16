@@ -98,17 +98,17 @@ int main(){
 			if(rawdata[r][c] > maxval[c]) maxval[c] = rawdata[r][c];
 			if(rawdata[r][c] < minval[c]) minval[c] = rawdata[r][c];
 		}
-		//cout << minval[c] << " : " << maxval[c] << endl;
+		//cout << c << ") " << minval[c] << " : " << maxval[c] << endl;
 	}
-	for(int c = 0; c < elems -1; c++){
-		//cout << "data ";
+	for(int c = 0; c < elems - 1; c++){
+		//cout << "data " << c << endl;
 		for(int r = 0; r < items; r++){
 			data[r][c] = (rawdata[r][c] - minval[c]) / (maxval[c] - minval[c]);
 			//cout << data[r][c] << " ";
 		}
 		//cout << endl;
 	}
-	for(int r = 0; r < items; r++) data[r][4] = rawdata[r][4];
+	//for(int r = 0; r < items; r++) data[r][4] = rawdata[r][4];
 		
 //set up weights
 	Matrix *v = new Matrix(J, I);
@@ -263,29 +263,48 @@ int main(){
 		}
 	} else {
 		for(int r = 0; r < items; r++){
-			//cout << r << "testdata{ ";
+			cout << r << "testdata{ ";
 			for(int c = 0; c < elems; c++){
 				testdata[r][c] = rawdata[r][c];
-				//cout << testdata[r][c] << " " ;
+				cout << testdata[r][c] << " " ;
 			}
-			//cout << "}" << endl;
+			cout << "}" << endl;
 		}
 	}
 	//normalizeTestData
-	for(int r = 0; r < items; r++){
-		for(int c = 0; c < elems - 1; c++){
-			tdata[r][c] = (testdata[r][c] - minval[c]) / (maxval[c] - minval[c]);
-		}
+	cout << "normalizing test data" << endl;
+	for(int c = 0; c < elems; c++){
+		cout << minval[c] << " : " << maxval[c] << endl;
 	}
+	for(int c = 0; c < elems - 1; c++){
+		cout << c << endl;
+		for(int r = 0; r < items; r++){
+			tdata[r][c] = (testdata[r][c] - minval[c]) / (maxval[c] - minval[c]);
+			cout << tdata[r][c] << " ";
+		}
+		cout << endl;
+	}
+
+	cout << "normalized data:" << endl;
+	/*for(int c = 0; c < elems; c++){
+		cout << minval[c] << " : " << maxval[c] << endl;
+	}
+	for(int r = 0; r < items; r++){
+		cout << r << "{ ";
+		for(int c = 0; c < elems; c++){
+			cout << tdata[r][c] << " " ;
+		}
+		cout << "}" << endl;
+	}	*/
 	success = 0;
 	int count = 0;
 	for(int ds = 0; ds < items; ds++){
-		if(!SUBMIT)goal = rawdata[ds][elems - 1];
+		goal = rawdata[ds][elems - 1];
 		input[0] = BIAS;
-		for(int i = 0; i < elems - 1; i++){
+		for(int i = 0; i < elems; i++){
 			input[i + 1] = tdata[ds][i];
 		}
-		//cout << "input " << ds << ": " << input[0] << " " << input[1] << " " << input[2] << " " << input[3] << " " << input[4] << endl; 
+		//cout << "input " << ds << ": " << input[0] << " " << input[1] << " " << input[2] << " " << input[3] << endl; 
 		Matrix *x = new Matrix(input, I);
 			if(SHOW_PROG)cout << "x" << endl;
 			if(SHOW_PROG)x->print();
@@ -308,6 +327,7 @@ int main(){
 		max = 0;
 		float maxScore = 0;
 		if(SHOW_TEST)cout << y->m[0][0] << " : "  << y->m[0][1] << " : " << y->m[0][2] << " || ";
+		//cout << y->m[0][0] << " : "  << y->m[0][1] << " : " << y->m[0][2] << " || ";
 		for(int k = 0; k < K; k++){
 			if(y->m[0][k] > maxScore){
 				maxScore = y->m[0][k];
