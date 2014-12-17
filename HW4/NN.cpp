@@ -70,7 +70,7 @@ int main(){
 				i++;
 				nums[i] = strtok(NULL, " ");
 			}
-			//printf("\n");
+			printf("\n");
 			for(int n = 0; n < elems; n++) rawdata[l][n] = atof(nums[n]);
 		}
 	
@@ -272,8 +272,11 @@ int main(){
 		}
 	}
 	//normalizeTestData
+	/*for(int c = 0; c < elems; c++){
+		cout << minval[c] << " : " << maxval[c] << endl;
+	}*/
 	for(int r = 0; r < items; r++){
-		for(int c = 0; c < elems - 1; c++){
+		for(int c = 0; c < elems; c++){
 			tdata[r][c] = (testdata[r][c] - minval[c]) / (maxval[c] - minval[c]);
 		}
 	}
@@ -282,10 +285,10 @@ int main(){
 	for(int ds = 0; ds < items; ds++){
 		if(!SUBMIT)goal = rawdata[ds][elems - 1];
 		input[0] = BIAS;
-		for(int i = 0; i < elems - 1; i++){
+		for(int i = 0; i < elems; i++){
 			input[i + 1] = tdata[ds][i];
 		}
-		//cout << "input " << ds << ": " << input[0] << " " << input[1] << " " << input[2] << " " << input[3] << " " << input[4] << endl; 
+		cout << "input " << ds << ": " << input[0] << " " << input[1] << " " << input[2] << " " << input[3] << " " << input[4] << endl; 
 		Matrix *x = new Matrix(input, I);
 			if(SHOW_PROG)cout << "x" << endl;
 			if(SHOW_PROG)x->print();
@@ -308,6 +311,7 @@ int main(){
 		max = 0;
 		float maxScore = 0;
 		if(SHOW_TEST)cout << y->m[0][0] << " : "  << y->m[0][1] << " : " << y->m[0][2] << " || ";
+		cout << "output: " << y->m[0][0] << " : "  << y->m[0][1] << " : " << y->m[0][2] << endl;
 		for(int k = 0; k < K; k++){
 			if(y->m[0][k] > maxScore){
 				maxScore = y->m[0][k];
